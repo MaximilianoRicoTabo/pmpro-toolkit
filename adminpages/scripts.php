@@ -228,7 +228,7 @@
 		$give_level_startdate = preg_replace('/^0-9\-/', '', $_REQUEST['give_level_startdate']);
 		$give_level_enddate = preg_replace('/^0-9\-/', '', $_REQUEST['give_level_enddate']);
 				
-		if(empty($give_level_id) || empty($give_level_startdate) || empty($give_level_enddate)) {
+		if( empty( $give_level_id ) || empty( $give_level_startdate ) ) {
 		?>
 		<hr /><p><strong>
 		<?php
