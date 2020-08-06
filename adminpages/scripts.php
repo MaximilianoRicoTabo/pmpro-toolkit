@@ -314,7 +314,7 @@
 		<?php
 			foreach($user_ids as $user_id)
 			{
-				pmpro_changeMembershipLevel(0, $user_id);
+				pmpro_cancelMembershipLevel( $cancel_level_id, $user_id );
 				echo ". ";
 			}
 
