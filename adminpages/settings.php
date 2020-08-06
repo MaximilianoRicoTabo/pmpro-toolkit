@@ -33,10 +33,9 @@ function pmprodev_view_as_settings() {
 	?>
 	<p>
 		<?php
-		echo esc_html_e(
-			'Enabling "View as..." will allow admins to view any page as if they had any membership level(s) for a brief period of time.<br>
-		To use it, add the query string parameter <code>pmprodev_view_as</code> to your URL, passing a series of level IDs separated by hyphens.', 'pmpro-toolkit'
-		);
+		esc_html_e( 'Enabling "View as..." will allow admins to view any page as if they had any membership level(s) for a brief period of time.', 'pmpro-toolkit' );
+		echo( '<br>' );
+		echo( sprintf( esc_html__( 'To use it, add the query string parameter %s to your URL, passing a series of level IDs separated by hyphens.', 'pmpro-toolkit' ), '<code>pmprodev_view_as</code>' ) );
 ?>
 	</p>
 	<p>
