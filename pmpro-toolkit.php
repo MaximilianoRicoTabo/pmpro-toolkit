@@ -89,7 +89,7 @@ function pmprodev_checkout_debug_email($level) {
         $http = 'http://';
 
     $email->subject = sprintf('%s Checkout Page Debug Log', get_bloginfo('name'));
-    $email->recipient = $pmprodev_options['checkout_debug_email'];
+    $email->email = $pmprodev_options['checkout_debug_email'];
     $email->template = 'checkout_debug';
     $email->body = file_get_contents(plugin_dir_path(__FILE__) . '/email/checkout_debug.html');
     $email->data = array(
