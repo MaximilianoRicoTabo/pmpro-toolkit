@@ -111,7 +111,10 @@ function pmprodev_settings_checkout_debug_email() {
 	global $pmprodev_options;
 	?>
 	<input type="text"  name="pmprodev_options[checkout_debug_email]" value="<?php echo $pmprodev_options['checkout_debug_email']; ?>">
-	<p class="description"><?php echo esc_html_e( 'Send an email every time the Checkout page is hit.<br>This email will contain data about the request, user, membership level, order, and other information.', 'pmpro-toolkit' ); ?></p>
+	<p class="description">
+		<?php esc_html_e( 'Send an email every time the Checkout page is hit.', 'pmpro-toolkit' ); ?>
+		<br>
+		<?php esc_html_e( 'This email will contain data about the request, user, membership level, order, and other information.', 'pmpro-toolkit' ); ?></p>
 <?php
 }
 
