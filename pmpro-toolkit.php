@@ -3,7 +3,7 @@
  * Plugin Name: Paid Memberships Pro - Developer's Toolkit Add On
  * Plugin URI: https://www.paidmembershipspro.com/add-ons/pmpro-toolkit/
  * Description: Various tools to test and debug Paid Memberships Pro enabled websites.
- * Version: .5.2
+ * Version: 0.6
  * Author: Paid Memberships Pro
  * Author URI: https://www.paidmembershipspro.com
  * Text Domain: pmpro-toolkit

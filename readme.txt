@@ -2,8 +2,8 @@
 Contributors: strangerstudios, jessica o
 Tags: paid memberships pro, pmpro, debug, developer, toolkit
 Requires at least: 4
-Tested up to: 5.1.1
-Stable tag: .5.2
+Tested up to: 5.4
+Stable tag: 0.6
 
 Adds various tools and settings to aid in the development of Paid Memberships Pro enabled websites.
 
@@ -29,45 +29,52 @@ Features:
 Please post it in the issues section of GitHub and we'll fix it as soon as we can. Thanks for helping. https://github.com/strangerstudios/pmpro-toolkit/issues
 
 == Changelog ==
-= .5.2 =
+= 0.6 - 2020-08-06 =
+* FEATURE: Added script to clear Visits, Views, and Logins report.
+* ENHANCEMENT: Added menu to navigate between settings and scripts pages.
+* BUG FIX/ENHANCEMENT: "Cancel all users with level" script now works with MMPU.
+* BUG FIX: Fixed issue where start date could not be entered for "Give all non-members level" script.
+* BUG FIX: Fixed issue where checkout debug email may not be sent to correct recipient.
+
+= 0.5.2 =
 * BUG FIX: Fixed the Cancel All Members script. (Thanks, Jessica Thomas)
 * BUG FIX: Fixed issue on the scripts page where clicking on text inputs would check/uncheck the cooresponding checkbox. (Thanks, Jessica Thomas)
 * ENHANCEMENT: Bit of code cleanup.
 
-= .5.1 =
+= 0.5.1 =
 * ENHANCEMENT: Ready for translation.
 * ENHANCEMENT: Added Spanish Translation.
 * ENHANCEMENT: WordPress Coding Standards.
 * ENHANCEMENT: Updated plugin name and links for consistency.
 
-= .5 =
+= 0.5 =
 * FEATURE: Added a script to give non-members a level.
 * BUG FIX: No longer trying to delete the memberships_users table twice. (Thanks, bhdd on GitHub)
 * BUG FIX: Fixed issue where only one entry on the usermeta table was deleted for each user. (Thanks, bhdd on GitHub)
 
-= .4 =
+= 0.4 =
 * Added script to change members from one level to another.
 * Added script to cancel all members of one level.
 * Added script to copy page restrictions from one level to another.
 
-= .3 =
+= 0.3 =
 * Added scripts to delete data from the database. (Use at your own risk!)
 
-= .2.1 =
+= 0.2.1 =
 * Fixed issue where pmprodev_view_as_has_membership_level() was making members seem like they don't have a membership level.
 
-= .2 =
+= 0.2 =
 * Added "Scheduled Cron Job Debugging" section to disable cron jobs.
 * Now only have one Gateway Callback Email setting "ipn_debug" that is used for all gateways.
 * Moved sections around a bit.
 
-= .1.2 =
+= 0.1.2 =
 * Removed some warnings/notices.
 * Added settings page.
 * "View as" feature now filtering pmpro_hasMembershipLevel() function as well.
 
-= .1.1 =
+= 0.1.1 =
 * Added "View as" access filter. Lets admins view any page as a specific membership level. Add "?pmprodev_view_as=3-2-1" to the query string.
 
-= .1 =
+= 0.1 =
 * This is the initial version of the plugin.
