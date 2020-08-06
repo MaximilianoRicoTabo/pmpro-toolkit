@@ -53,6 +53,11 @@
 		$clean_pmpro_options = true;
 	else
 		$clean_pmpro_options = false;
+
+	if(!empty($_POST['clear_vvl_report']))
+		$clear_vvl_report = true;
+	else
+		$clear_vvl_report = false;
 		
 	if(!empty($_POST['move_level']))
 		$move_level = true;
@@ -180,6 +185,18 @@
 		<hr /><p><strong>
 		<?php
 		echo __( 'Options deleted.', 'pmpro-toolkit' );
+		?>
+		</strong></p>
+		<?php
+	}
+
+	if ( $clear_vvl_report ) {
+		$wpdb->query("DELETE FROM $wpdb->usermeta WHERE meta_key = 'pmpro_visits' OR meta_key = 'pmpro_views' OR meta_key = 'pmpro_logins'");
+		$wpdb->query("DELETE FROM $wpdb->options WHERE option_name = 'pmpro_visits' OR option_name = 'pmpro_views' OR option_name = 'pmpro_logins'");
+		?>
+		<hr /><p><strong>
+		<?php
+		echo __( 'Visits, Views, and Logins report cleared.', 'pmpro-toolkit' );
 		?>
 		</strong></p>
 		<?php
@@ -362,6 +379,12 @@
 		<p>
 			<input type="checkbox" id="clean_pmpro_options" name="clean_pmpro_options" value="1" /> 
 			<label for="clean_pmpro_options"><?php echo esc_html_e( 'Delete all PMPro options. (Any option prefixed with pmpro_ but not the DB version or PMPro page_id options.)', 'pmpro-toolkit' ); ?></label>
+		</p>
+
+		<hr />
+		<p>
+			<input type="checkbox" id="clear_vvl_report" name="clear_vvl_report" value="1" /> 
+			<label for="clear_vvl_report"><?php echo esc_html_e( 'Clear visits, views, and logins report.', 'pmpro-toolkit' ); ?></label>
 		</p>
 
 		<hr />		
