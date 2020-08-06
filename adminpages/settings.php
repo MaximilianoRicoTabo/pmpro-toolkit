@@ -121,7 +121,13 @@ function pmprodev_settings_checkout_debug_email() {
 function pmprodev_settings_view_as_enabled() {
 	global $pmprodev_options;
 	?>
-	<input id="view_as_enabled" type="checkbox"  name="pmprodev_options[view_as_enabled]" value="1" <?php checked( $pmprodev_options['view_as_enabled'], 1 ); ?> />
+	<input id="view_as_enabled" type="checkbox"  name="pmprodev_options[view_as_enabled]" value="1"
+	<?php
+	if ( ! empty( $pmprodev_options['view_as_enabled'] ) ) {
+		echo 'checked="true"';
+	}
+	?>
+	>
 	<label for="view_as_enabled"><?php _e( 'Check to enable the View As feature.', 'pmpro-toolkit' ); ?></label>
 	<?php
 }
