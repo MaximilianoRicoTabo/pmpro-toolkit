@@ -1,5 +1,16 @@
 <div class="wrap">
-<h2>PMPro Toolkit Database Scripts</h2>
+<h2><?php esc_html_e( 'Developer\'s Toolkit for Paid Memberships Pro', 'pmpro-toolkit' ); ?></h2>
+<?php
+	if ( isset( $_REQUEST[ 'page' ] ) ) {
+		$view = sanitize_text_field( $_REQUEST[ 'page' ] );
+	} else {
+		$view = '';
+	}
+?>
+<nav class="nav-tab-wrapper">
+	<a href="<?php echo admin_url( 'options-general.php?page=pmprodev' );?>" class="nav-tab<?php if($view == 'pmprodev') { ?> nav-tab-active<?php } ?>"><?php _e('Toolkit Options', 'pmpro-toolkit' );?></a>
+	<a href="<?php echo admin_url( 'tools.php?page=pmprodev-database-scripts' );?>" class="nav-tab<?php if($view == 'pmprodev-database-scripts') { ?> nav-tab-active<?php } ?>"><?php _e('Database Scripts', 'pmpro-toolkit' );?></a>
+</nav>
 <?php 	
     global $wpdb, $pmprodev_member_tables, $pmprodev_other_tables;
 
