@@ -33,10 +33,9 @@ function pmprodev_view_as_settings() {
 	?>
 	<p>
 		<?php
-		echo esc_html_e(
-			'Enabling "View as..." will allow admins to view any page as if they had any membership level(s) for a brief period of time.<br>
-		To use it, add the query string parameter <code>pmprodev_view_as</code> to your URL, passing a series of level IDs separated by hyphens.', 'pmpro-toolkit'
-		);
+		esc_html_e( 'Enabling "View as..." will allow admins to view any page as if they had any membership level(s) for a brief period of time.', 'pmpro-toolkit' );
+		echo( '<br>' );
+		echo( sprintf( esc_html__( 'To use it, add the query string parameter %s to your URL, passing a series of level IDs separated by hyphens.', 'pmpro-toolkit' ), '<code>pmprodev_view_as</code>' ) );
 ?>
 	</p>
 	<p>
@@ -130,7 +129,18 @@ function pmprodev_settings_view_as_enabled() {
 ?>
 
 <div class="wrap">
-	<h2>PMPro Toolkit Options</h2>
+	<h2><?php esc_html_e( 'Developer\'s Toolkit for Paid Memberships Pro', 'pmpro-toolkit' ); ?></h2>
+	<?php
+		if ( isset( $_REQUEST[ 'page' ] ) ) {
+			$view = sanitize_text_field( $_REQUEST[ 'page' ] );
+		} else {
+			$view = '';
+		}
+	?>
+	<nav class="nav-tab-wrapper">
+		<a href="<?php echo admin_url( 'options-general.php?page=pmprodev' );?>" class="nav-tab<?php if($view == 'pmprodev') { ?> nav-tab-active<?php } ?>"><?php _e('Toolkit Options', 'pmpro-toolkit' );?></a>
+		<a href="<?php echo admin_url( 'tools.php?page=pmprodev-database-scripts' );?>" class="nav-tab<?php if($view == 'pmprodev-database-scripts') { ?> nav-tab-active<?php } ?>"><?php _e('Database Scripts', 'pmpro-toolkit' );?></a>
+	</nav>
 	<form action="options.php" method="POST">
 		<?php
 		settings_fields( 'pmprodev_options' );
