@@ -256,7 +256,7 @@
 		$give_level_startdate = preg_replace('/^0-9\-/', '', $_REQUEST['give_level_startdate']);
 		$give_level_enddate = preg_replace('/^0-9\-/', '', $_REQUEST['give_level_enddate']);
 				
-		if(empty($give_level_id) || empty($give_level_startdate) || empty($give_level_enddate)) {
+		if( empty( $give_level_id ) || empty( $give_level_startdate ) ) {
 		?>
 		<hr /><p><strong>
 		<?php
@@ -398,9 +398,8 @@
 
 		<hr />
 		<p>
-			<input type="checkbox" id="give_level" name="give_level" value="1" /> 			
-			<?php echo esc_html_e( 'Give all non-members level ID ', 'pmpro-toolkit' ); ?><input type="text" name="give_level_id" value="" size="4" />. <?php echo esc_html_e( 'Set the start date to <input type="text" name="give_level_startdate" value="" size="10" /> (YYYY-MM-DD) and set the end date to ', 'pmpro-toolkit' ); ?><input type="text" name="give_level_enddate" value="" size="10" /> (optional, YYYY-MM-DD).			
-			<br/ ><small><?php echo esc_html_e( 'This only gives users\' the level via the database and does NOT fire any pmpro_change_membership_level hooks.', 'pmpro-toolkit' ); ?></small>
+			<input type="checkbox" id="give_level" name="give_level" value="1" /> <?php echo esc_html_e( 'Give all non-members level ID ', 'pmpro-toolkit' ); ?> <input type="text" name="give_level_id" value="" size="4" />. <?php echo esc_html_e( 'Set the start date to', 'pmpro-toolkit' ); ?> <input type="text" name="give_level_startdate" value="" size="10" /> <?php echo esc_html_e( '(YYYY-MM-DD) and set the end date to ', 'pmpro-toolkit' ); ?> <input type="text" name="give_level_enddate" value="" size="10" /> <?php echo esc_html_e( '(optional, YYYY-MM-DD).', 'pmpro-toolkit' ); ?>
+			<br/ ><small><?php echo esc_html_e( 'This only gives users the level via the database and does NOT fire any pmpro_change_membership_level hooks.', 'pmpro-toolkit' ); ?></small>
 		</p>
 
 		<hr />
