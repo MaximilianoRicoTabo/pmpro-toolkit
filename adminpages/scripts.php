@@ -109,7 +109,7 @@
 
 	// scrub member data
 	if ( $scrub_member_data ) {
-		$user_ids = $wpdb->get_col( "SELECT ID FROM $wpdb->users" );
+		$user_ids = $wpdb->get_col( "SELECT ID FROM $wpdb->users WHERE user_email NOT LIKE '%+scrub%'" );
 
 		?>
 		<hr /><p><strong>
