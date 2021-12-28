@@ -2,8 +2,8 @@
 Contributors: strangerstudios, jessica o
 Tags: paid memberships pro, pmpro, debug, developer, toolkit
 Requires at least: 4
-Tested up to: 5.4
-Stable tag: 0.6
+Tested up to: 5.9
+Stable tag: 0.6.1
 
 Adds various tools and settings to aid in the development of Paid Memberships Pro enabled websites.
 
@@ -29,6 +29,9 @@ Features:
 Please post it in the issues section of GitHub and we'll fix it as soon as we can. Thanks for helping. https://github.com/strangerstudios/pmpro-toolkit/issues
 
 == Changelog ==
+= 0.6.1 - 2021-12-27
+* BUG FIX/ENHANCEMENT: Added third $cancel_level_id parameter to the pmpro_after_change_membership_level action.
+
 = 0.6 - 2020-08-06 =
 * FEATURE: Added script to clear Visits, Views, and Logins report.
 * ENHANCEMENT: Added menu to navigate between settings and scripts pages.

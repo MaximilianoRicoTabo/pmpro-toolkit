@@ -242,7 +242,7 @@
 
 				foreach($user_ids as $user_id)
 				{
-					do_action('pmpro_after_change_membership_level', $to_level_id, $user_id);
+					do_action( 'pmpro_after_change_membership_level', $to_level_id, $user_id, $from_level_id );
 					echo ". ";
 				}
 
