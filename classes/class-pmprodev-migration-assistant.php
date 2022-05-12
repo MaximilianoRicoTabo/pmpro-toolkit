@@ -330,6 +330,11 @@ class PMProDev_Migration_Assistant {
 	 */
 	private static function helper_import_to_options( $import_data ) {
 		foreach ( $import_data as $option_name => $option_value ) {
+			// Make sure that option name begins with 'pmpro_'.
+			// If not, we don't want to import it.
+			if ( strpos( $option_name, 'pmpro_' ) !== 0 ) {
+				continue;
+			}
 			update_option( $option_name, $option_value );
 		}
 	}
