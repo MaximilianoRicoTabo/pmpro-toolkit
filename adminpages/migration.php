@@ -19,14 +19,20 @@
 			$_FILES['pmprodev-import-file']['error'] == UPLOAD_ERR_OK // Checks for errors.
       		&& is_uploaded_file( $_FILES['pmprodev-import-file']['tmp_name'] )
 		) {
-			// Import the file.
-			$error = PMProDev_Migration_Assistant::import( $_FILES['pmprodev-import-file']['tmp_name'] );
-			if ( is_string( $error ) ) {
-				// There was an error during the import.
-				echo '<div class="notice notice-large notice-error inline"><p>' . esc_html( $error ) . '</p></div>';
+			// Verify the nonce.
+			if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'pmprodev-import' ) ) {
+				// Verification failed.
+				echo '<div class="notice notice-large notice-error inline"><p>' . esc_html__( 'Nonce verification failed.' ) . '</p></div>';
 			} else {
-				// Import successful.
-				echo '<div class="notice notice-large notice-success inline"><p>' . esc_html__( 'Import successful.', 'pmpro-toolkit' ) . '</p></div>';
+				// Verification succeeded. Import the file.
+				$error = PMProDev_Migration_Assistant::import( $_FILES['pmprodev-import-file']['tmp_name'] );
+				if ( is_string( $error ) ) {
+					// There was an error during the import.
+					echo '<div class="notice notice-large notice-error inline"><p>' . esc_html( $error ) . '</p></div>';
+				} else {
+					// Import successful.
+					echo '<div class="notice notice-large notice-success inline"><p>' . esc_html__( 'Import successful.', 'pmpro-toolkit' ) . '</p></div>';
+				}
 			}
 		}
 	?>
@@ -50,7 +56,8 @@
 	<form method="post" enctype="multipart/form-data">
 		<label for="pmprodev-import-file"><?php esc_html_e( 'Choose a file to import', 'pmpro-toolkit' ); ?>:</label>
 		<input type="file" name="pmprodev-import-file" accept="application/JSON">
-		<p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="<?php echo esc_html_e( 'Import PMPro Data', 'pmpro-toolkit' ); ?>"></p>
+		<?php wp_nonce_field( 'pmprodev-import' ); ?>
+		<p class="submit"><input type="submit" class="button button-primary" value="<?php echo esc_html_e( 'Import PMPro Data', 'pmpro-toolkit' ); ?>" onclick="return confirm('<?php esc_html_e( 'This import will permanently overwrite site data. Are you sure that you would like to continue? ', 'pmpro-toolkit' ); ?>')"></p>
 	</form>
 	
 	<script>
