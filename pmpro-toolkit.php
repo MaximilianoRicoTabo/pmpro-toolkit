@@ -17,6 +17,9 @@ global $pmprodev_options, $gateway;
 $pmprodev_options = get_option('pmprodev_options');
 if(empty($pmprodev_options)) {
     $pmprodev_options = array(
+        'expire_memberships' => '',
+        'expiration_warnings' => '',
+        'credit_card_expiring' => '',
         'ipn_debug' => '',
         'authnet_silent_post_debug' => '',
         'stripe_webhook_debug' => '',
@@ -243,10 +246,38 @@ function pmprodev_process_migration_export() {
 }
 add_action( 'admin_init', 'pmprodev_process_migration_export' );
 
+/**
+ * Sanitize options during saving of settings pages. Loop through options and rebuild the array with sanitized values.
+ *
+ * @since 0.7
+ * 
+ * @param array $pmprodev_options An array of POST values from the settings page.
+ * @return array $sanitized_options A sanitized array of values (mirror of $pmprodev_options).
+ */
+function pmprodev_sanitize_options( $pmprodev_options ) {
+    $sanitized_options = array();
+    foreach( $pmprodev_options as $option => $value ) {
+        if ( is_numeric( $value ) ) {
+            $sanitized_value = intval( $value );
+        } elseif ( strpos( $option, 'email' ) || strpos( $value, '@' ) ) {
+            $sanitized_value = sanitize_email( $value );
+        } else {
+            $sanitized_value = sanitize_text_field( $value );
+        }
+        // Add the sanitized value
+        $sanitized_options[$option] = $sanitized_value;
+    }
+    return $sanitized_options;
+}
+
+/**
+ * Initialize admin settings.
+ * @since 0.1
+ */
 function pmprodev_admin_init() {
 
     //register setting
-    register_setting('pmprodev_options', 'pmprodev_options');
+    register_setting('pmprodev_options', 'pmprodev_options', array( 'sanitize_callback' => 'pmprodev_sanitize_options' ) );
 
     //add settings sections
 	add_settings_section( 'pmprodev-email', __( 'Email Debugging', 'pmpro-toolkit' ), 'pmprodev_email_settings', 'pmprodev' );

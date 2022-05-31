@@ -1,5 +1,5 @@
 <div class="wrap">
-<h2><?php esc_html_e( 'Developer\'s Toolkit for Paid Memberships Pro', 'pmpro-toolkit' ); ?></h2>
+<h2><?php esc_html_e( "Developer's Toolkit for Paid Memberships Pro", 'pmpro-toolkit' ); ?></h2>
 <?php
 	if ( isset( $_REQUEST[ 'page' ] ) ) {
 		$view = sanitize_text_field( $_REQUEST[ 'page' ] );
@@ -8,9 +8,9 @@
 	}
 ?>
 <nav class="nav-tab-wrapper">
-	<a href="<?php echo admin_url( 'options-general.php?page=pmprodev' );?>" class="nav-tab<?php if($view == 'pmprodev') { ?> nav-tab-active<?php } ?>"><?php _e('Toolkit Options', 'pmpro-toolkit' );?></a>
-	<a href="<?php echo admin_url( 'tools.php?page=pmprodev-database-scripts' );?>" class="nav-tab<?php if($view == 'pmprodev-database-scripts') { ?> nav-tab-active<?php } ?>"><?php _e('Database Scripts', 'pmpro-toolkit' );?></a>
-	<a href="<?php echo admin_url( 'tools.php?page=pmprodev-migration-assistant' );?>" class="nav-tab<?php if($view == 'pmprodev-migration-assistant') { ?> nav-tab-active<?php } ?>"><?php _e('Migration Assistant', 'pmpro-toolkit' );?></a>
+	<a href="<?php echo admin_url( 'options-general.php?page=pmprodev' );?>" class="nav-tab<?php if($view == 'pmprodev') { ?> nav-tab-active<?php } ?>"><?php esc_html_e('Toolkit Options', 'pmpro-toolkit' );?></a>
+	<a href="<?php echo admin_url( 'tools.php?page=pmprodev-database-scripts' );?>" class="nav-tab<?php if($view == 'pmprodev-database-scripts') { ?> nav-tab-active<?php } ?>"><?php esc_html_e('Database Scripts', 'pmpro-toolkit' );?></a>
+	<a href="<?php echo admin_url( 'tools.php?page=pmprodev-migration-assistant' );?>" class="nav-tab<?php if($view == 'pmprodev-migration-assistant') { ?> nav-tab-active<?php } ?>"><?php esc_html_e('Migration Assistant', 'pmpro-toolkit' );?></a>
 </nav>
 <?php 	
     global $wpdb, $pmprodev_member_tables, $pmprodev_other_tables;
@@ -131,15 +131,15 @@
 			{
 				//emails
 				$new_email = str_replace("@", "+scrub" . $count . "@", $admin_email);
-				$wpdb->query("UPDATE $wpdb->users SET user_email = '" . $new_email . "' WHERE ID = " . $user_id . " LIMIT 1");
+				$wpdb->query("UPDATE $wpdb->users SET user_email = '" . esc_sql( $new_email ) . "' WHERE ID = " . intval( $user_id ) . " LIMIT 1");
 			}
 
 			//stil update transaction ids/etc for admin users
 			
 			//orders
 			$new_transaction_id = "SCRUBBED-" . $count;
-			$wpdb->query("UPDATE $wpdb->pmpro_membership_orders SET payment_transaction_id = '" . $new_transaction_id . "' WHERE user_id = '" . $user_id . "' AND payment_transaction_id <> '' ");
-			$wpdb->query("UPDATE $wpdb->pmpro_membership_orders SET subscription_transaction_id = '" . $new_transaction_id . "' WHERE user_id = '" . $user_id . "' AND subscription_transaction_id <> '' ");
+			$wpdb->query("UPDATE $wpdb->pmpro_membership_orders SET payment_transaction_id = '" . esc_sql( $new_transaction_id ) . "' WHERE user_id = '" . intval( $user_id ) . "' AND payment_transaction_id <> '' ");
+			$wpdb->query("UPDATE $wpdb->pmpro_membership_orders SET subscription_transaction_id = '" . esc_sql( $new_transaction_id ) . "' WHERE user_id = '" . intval( $user_id ) . "' AND subscription_transaction_id <> '' ");
 			
 			//braintree customer ids
 			update_user_meta($user_id, "pmpro_braintree_customerid", $new_transaction_id);
@@ -147,7 +147,12 @@
 			
 			echo ". ";
 		}
-		
+
+		echo '<br/>';
+
+		// Show a completed message.
+		esc_html_e( 'Process completed.', 'pmpro-toolkit' );	
+
 		echo "</p>";
 	}
 	
@@ -174,6 +179,10 @@
 			
 			echo ". ";
 		}
+
+		echo '<br/>';
+		// Show a completed message.
+		esc_html_e( 'Process completed.', 'pmpro-toolkit' );	
 		
 		echo "</p>";
 	}
@@ -197,7 +206,7 @@
 		?>
 		<hr /><p><strong>
 		<?php
-		echo __( 'Visits, Views, and Logins report cleared.', 'pmpro-toolkit' );
+		esc_html_e( 'Visits, Views, and Logins report cleared.', 'pmpro-toolkit' );
 		?>
 		</strong></p>
 		<?php
@@ -246,6 +255,10 @@
 					do_action( 'pmpro_after_change_membership_level', $to_level_id, $user_id, $from_level_id );
 					echo ". ";
 				}
+
+				echo '<br/>';
+				// Show a completed message.
+				esc_html_e( 'Process completed.', 'pmpro-toolkit' );	
 
 				echo "</p>";
 			}
@@ -319,6 +332,10 @@
 				echo ". ";
 			}
 
+			echo '<br/>';
+			// Show a completed message.
+			esc_html_e( 'Process completed.', 'pmpro-toolkit' );	
+
 			echo "</p>";
 		}
 	}
@@ -342,84 +359,84 @@
 	<form id="form-scripts" action="" method="post">
 		<input type="hidden" name="page" value="pmprodev-database-scripts" />	
 	
-		<p><?php echo esc_html_e( 'This feature allows you to either clear data from PMPro-related database tables and options or to scrub member email and transaction id data to prevent real members from receiving updates or having their subscriptions changed.', 'pmpro-toolkit' ); ?></p>
+		<p><?php esc_html_e( 'This feature allows you to either clear data from PMPro-related database tables and options or to scrub member email and transaction id data to prevent real members from receiving updates or having their subscriptions changed.', 'pmpro-toolkit' ); ?></p>
 
-		<p><?php echo esc_html_e( 'Check the options that you would like to apply. The cleanup scripts will be run upon saving these settings.', 'pmpro-toolkit' ); ?></p>
+		<p><?php esc_html_e( 'Check the options that you would like to apply. The cleanup scripts will be run upon saving these settings.', 'pmpro-toolkit' ); ?></p>
 		
 		<div class="error">
-			<p><?php echo __( '<strong>IMPORTANT NOTE:</strong> Checking these options WILL delete data from your database. Please backup first and make sure that you intend to delete this data.', 'pmpro-toolkit' ); ?></p>
+			<p><?php _e( '<strong>IMPORTANT NOTE:</strong> Checking these options WILL delete data from your database. Please backup first and make sure that you intend to delete this data.', 'pmpro-toolkit' ); ?></p>
 		</div>
 		
 		<hr />
 		<p>
 			<input type="checkbox" id="clean_member_tables" name="clean_member_tables" value="1" /> 
-			<label for="clean_member_tables"><?php echo esc_html_e( 'Delete all member data.', 'pmpro-toolkit' ); ?> (<?php echo implode( ', ', $pmprodev_member_tables ); ?>)</label>
+			<label for="clean_member_tables"><?php esc_html_e( 'Delete all member data.', 'pmpro-toolkit' ); ?> (<?php echo implode( ', ', $pmprodev_member_tables ); ?>)</label>
 		</p>
 		
 		<hr />
 		<p>
 			<input type="checkbox" id="clean_level_data" name="clean_level_data" value="1" /> 
-			<label for="clean_level_data"><?php echo esc_html_e( 'Delete all level and discount code data.', 'pmpro-toolkit' ); ?> (<?php echo implode( ', ', $pmprodev_other_tables ); ?>)</label>
+			<label for="clean_level_data"><?php esc_html_e( 'Delete all level and discount code data.', 'pmpro-toolkit' ); ?> (<?php echo implode( ', ', $pmprodev_other_tables ); ?>)</label>
 		</p>
 
 		<hr />
 		<p>
 			<input type="checkbox" id="scrub_member_data" name="scrub_member_data" value="1" /> 
 			<label for="scrub_member_data"><?php echo sprintf( __( 'Scrub member emails and transaction ids. Updates non-admins in %s and %s tables.', 'pmpro-toolkit' ), $wpdb->users, $wpdb->pmpro_membership_orders ); ?></label>
-			<br/ ><small><?php echo esc_html_e( 'This may time out on slow servers or sites with large numbers of users.', 'pmpro-toolkit' ); ?></small>
+			<br/ ><small><?php esc_html_e( 'This may time out on slow servers or sites with large numbers of users.', 'pmpro-toolkit' ); ?></small>
 		</p>
 
 		<hr />
 		<p>
 			<input type="checkbox" id="delete_users" name="delete_users" value="1" /> 
 			<label for="delete_users"><?php echo sprintf( __( "Delete non-admin users. (Deletes from %s and %s tables directly.)", 'pmpro-toolkit' ), $wpdb->users, $wpdb->usermeta ); ?></label>
-			<br/ ><small><?php echo esc_html_e( 'This may time out on slow servers or sites with large numbers of users.', 'pmpro-toolkit' ); ?></small>
+			<br/ ><small><?php esc_html_e( 'This may time out on slow servers or sites with large numbers of users.', 'pmpro-toolkit' ); ?></small>
 		</p>
 
 		<hr />
 		<p>
 			<input type="checkbox" id="clean_pmpro_options" name="clean_pmpro_options" value="1" /> 
-			<label for="clean_pmpro_options"><?php echo esc_html_e( 'Delete all PMPro options. (Any option prefixed with pmpro_ but not the DB version or PMPro page_id options.)', 'pmpro-toolkit' ); ?></label>
+			<label for="clean_pmpro_options"><?php esc_html_e( 'Delete all PMPro options. (Any option prefixed with pmpro_ but not the DB version or PMPro page_id options.)', 'pmpro-toolkit' ); ?></label>
 		</p>
 
 		<hr />
 		<p>
 			<input type="checkbox" id="clear_vvl_report" name="clear_vvl_report" value="1" /> 
-			<label for="clear_vvl_report"><?php echo esc_html_e( 'Clear visits, views, and logins report.', 'pmpro-toolkit' ); ?></label>
+			<label for="clear_vvl_report"><?php esc_html_e( 'Clear visits, views, and logins report.', 'pmpro-toolkit' ); ?></label>
 		</p>
 
 		<hr />		
 		<p>
 			<input type="checkbox" id="move_level" name="move_level" value="1" />			
 			<?php
-			echo esc_html_e( 'Change all members with level ID', 'pmpro-toolkit' );
+			esc_html_e( 'Change all members with level ID', 'pmpro-toolkit' );
 ?>
- <input type="text" name="move_level_a" value="" size="4" /> to level ID <input type="text" name="move_level_b" value="" size="4" />. <?php echo esc_html_e( 'Will NOT cancel any recurring subscriptions.', 'pmpro-toolkit' ); ?>
+ <input type="text" name="move_level_a" value="" size="4" /> to level ID <input type="text" name="move_level_b" value="" size="4" />. <?php esc_html_e( 'Will NOT cancel any recurring subscriptions.', 'pmpro-toolkit' ); ?>
 		</p>
 
 		<hr />
 		<p>
-			<input type="checkbox" id="give_level" name="give_level" value="1" /> <?php echo esc_html_e( 'Give all non-members level ID ', 'pmpro-toolkit' ); ?> <input type="text" name="give_level_id" value="" size="4" />. <?php echo esc_html_e( 'Set the start date to', 'pmpro-toolkit' ); ?> <input type="text" name="give_level_startdate" value="" size="10" /> <?php echo esc_html_e( '(YYYY-MM-DD) and set the end date to ', 'pmpro-toolkit' ); ?> <input type="text" name="give_level_enddate" value="" size="10" /> <?php echo esc_html_e( '(optional, YYYY-MM-DD).', 'pmpro-toolkit' ); ?>
-			<br/ ><small><?php echo esc_html_e( 'This only gives users the level via the database and does NOT fire any pmpro_change_membership_level hooks.', 'pmpro-toolkit' ); ?></small>
+			<input type="checkbox" id="give_level" name="give_level" value="1" /> <?php esc_html_e( 'Give all non-members level ID ', 'pmpro-toolkit' ); ?> <input type="text" name="give_level_id" value="" size="4" />. <?php esc_html_e( 'Set the start date to', 'pmpro-toolkit' ); ?> <input type="text" name="give_level_startdate" value="" size="10" /> <?php esc_html_e( '(YYYY-MM-DD) and set the end date to ', 'pmpro-toolkit' ); ?> <input type="text" name="give_level_enddate" value="" size="10" /> <?php esc_html_e( '(optional, YYYY-MM-DD).', 'pmpro-toolkit' ); ?>
+			<br/ ><small><?php esc_html_e( 'This only gives users the level via the database and does NOT fire any pmpro_change_membership_level hooks.', 'pmpro-toolkit' ); ?></small>
 		</p>
 
 		<hr />
 		<p>
 			<input type="checkbox" id="cancel_level" name="cancel_level" value="1" /> 			
 			<?php
-			echo esc_html_e( 'Cancel all members with level ID', 'pmpro-toolkit' );
+			esc_html_e( 'Cancel all members with level ID', 'pmpro-toolkit' );
 ?>
- <input type="text" name="cancel_level_id" value="" size="4" />. <?php echo esc_html_e( 'WILL also cancel any recurring subscriptions.', 'pmpro-toolkit' ); ?>
+ <input type="text" name="cancel_level_id" value="" size="4" />. <?php esc_html_e( 'WILL also cancel any recurring subscriptions.', 'pmpro-toolkit' ); ?>
 		</p>
 
 		<hr />
 		<p>
 			<input type="checkbox" id="copy_memberships_pages" name="copy_memberships_pages" value="1" /> 
-			<?php echo esc_html_e( 'Make all pages that require level ID', 'pmpro-toolkit' ); ?> <input type="text" name="copy_memberships_pages_a" value="" size="4" /> <?php echo esc_html_e( 'also require level ID', 'pmpro-toolkit' ); ?> <input type="text" name="copy_memberships_pages_b" value="" size="4" />.			
+			<?php esc_html_e( 'Make all pages that require level ID', 'pmpro-toolkit' ); ?> <input type="text" name="copy_memberships_pages_a" value="" size="4" /> <?php esc_html_e( 'also require level ID', 'pmpro-toolkit' ); ?> <input type="text" name="copy_memberships_pages_b" value="" size="4" />.			
 		</p>
 
 		<hr />
-		<p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="<?php echo esc_html_e( 'Save Changes', 'pmpro-toolkit' ); ?>"></p>
+		<p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_html_e( 'Save Changes', 'pmpro-toolkit' ); ?>"></p>
 	</form>
 	
 	<script>
