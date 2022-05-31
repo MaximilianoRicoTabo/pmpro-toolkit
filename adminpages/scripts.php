@@ -10,6 +10,7 @@
 <nav class="nav-tab-wrapper">
 	<a href="<?php echo admin_url( 'options-general.php?page=pmprodev' );?>" class="nav-tab<?php if($view == 'pmprodev') { ?> nav-tab-active<?php } ?>"><?php _e('Toolkit Options', 'pmpro-toolkit' );?></a>
 	<a href="<?php echo admin_url( 'tools.php?page=pmprodev-database-scripts' );?>" class="nav-tab<?php if($view == 'pmprodev-database-scripts') { ?> nav-tab-active<?php } ?>"><?php _e('Database Scripts', 'pmpro-toolkit' );?></a>
+	<a href="<?php echo admin_url( 'tools.php?page=pmprodev-migration-assistant' );?>" class="nav-tab<?php if($view == 'pmprodev-migration-assistant') { ?> nav-tab-active<?php } ?>"><?php _e('Migration Assistant', 'pmpro-toolkit' );?></a>
 </nav>
 <?php 	
     global $wpdb, $pmprodev_member_tables, $pmprodev_other_tables;
