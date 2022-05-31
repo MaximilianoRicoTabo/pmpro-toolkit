@@ -7,7 +7,7 @@ class PMProDev_Migration_Assistant {
 	/**
 	 * Exports PMPro data to a file.
 	 *
-	 * @since TBD
+	 * @since 0.7
 	 *
 	 * @param string|array $export_types The types of information to export.
 	 *
@@ -44,7 +44,7 @@ class PMProDev_Migration_Assistant {
 	/**
 	 * Imports PMPro data from a file.
 	 *
-	 * @since TBD
+	 * @since 0.7
 	 *
 	 * @param string $file The location of the file to import from.
 	 * @return null|string The error message, if any, or null if no error.
@@ -92,7 +92,7 @@ class PMProDev_Migration_Assistant {
 	/**
 	 * Get levels export data.
 	 *
-	 * @since TBD
+	 * @since 0.7
 	 *
 	 * @return array The levels export data.
 	 */
@@ -135,7 +135,7 @@ class PMProDev_Migration_Assistant {
 	 * This method will always create new levels and not
 	 * overwrite existing levels.
 	 *
-	 * @since TBD
+	 * @since 0.7
 	 *
 	 * @param array $levels_data The levels to import.
 	 *
@@ -196,7 +196,7 @@ class PMProDev_Migration_Assistant {
 	/**
 	 * Get email templates export data.
 	 *
-	 * @since TBD
+	 * @since 0.7
 	 *
 	 * @return array The email templates export data.
 	 */
@@ -218,7 +218,7 @@ class PMProDev_Migration_Assistant {
 	/**
 	 * Import email templates data.
 	 *
-	 * @since TBD
+	 * @since 0.7
 	 *
 	 * @param array $email_templates_data The email templates to import.
 	 *
@@ -231,7 +231,7 @@ class PMProDev_Migration_Assistant {
 	/**
 	 * Get payment settings export data.
 	 *
-	 * @since TBD
+	 * @since 0.7
 	 *
 	 * @return array The payment settings export data.
 	 */
@@ -261,7 +261,7 @@ class PMProDev_Migration_Assistant {
 	/**
 	 * Import payment settings data.
 	 *
-	 * @since TBD
+	 * @since 0.7
 	 *
 	 * @param array $payment_settings_data The payment settings to import.
 	 *
@@ -274,7 +274,7 @@ class PMProDev_Migration_Assistant {
 	/**
 	 * Get advanced settings export data.
 	 *
-	 * @since TBD
+	 * @since 0.7
 	 *
 	 * @return array The advanced settings export data.
 	 */
@@ -313,7 +313,7 @@ class PMProDev_Migration_Assistant {
 	/**
 	 * Import advanced settings data.
 	 *
-	 * @since TBD
+	 * @since 0.7
 	 *
 	 * @param array $advanced_settings_data The advanced settings to import.
 	 */
@@ -324,7 +324,7 @@ class PMProDev_Migration_Assistant {
 	/**
 	 * Helper function to add import data to wp_options table.
 	 *
-	 * @since TBD
+	 * @since 0.7
 	 *
 	 * @param array $import_data The import data to add.
 	 */
@@ -335,14 +335,14 @@ class PMProDev_Migration_Assistant {
 			if ( strpos( $option_name, 'pmpro_' ) !== 0 ) {
 				continue;
 			}
-			update_option( $option_name, $option_value );
+			update_option( $option_name, wp_kses_post( $option_value ) );
 		}
 	}
 
 	/**
 	 * Helper function to get export data from wp_options table.
 	 *
-	 * @since TBD
+	 * @since 0.7
 	 *
 	 * @param array $option_names_to_export The names of the options to export.
 	 */
@@ -364,7 +364,7 @@ class PMProDev_Migration_Assistant {
 	/**
 	 * Helper function to prepend 'pmpro_' to an array of option names.
 	 *
-	 * @since TBD
+	 * @since 0.7
 	 *
 	 * @param array $option_names The option names to prepend.
 	 * @return array The option names with 'pmpro_' prepended.
