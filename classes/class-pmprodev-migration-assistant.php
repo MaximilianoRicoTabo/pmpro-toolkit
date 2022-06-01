@@ -335,6 +335,12 @@ class PMProDev_Migration_Assistant {
 			if ( strpos( $option_name, 'pmpro_' ) !== 0 ) {
 				continue;
 			}
+			
+			// Make sure the option name exists/used in PMPro, otherwise don't import it.
+			if ( ! in_array( $option_name, self::allowed_options() ) ) {
+				continue;
+			}
+
 			update_option( $option_name, wp_kses_post( $option_value ) );
 		}
 	}
@@ -373,5 +379,47 @@ class PMProDev_Migration_Assistant {
 		return array_map( function( $option_name ) {
 			return 'pmpro_' . $option_name;
 		}, $option_names );
+	}
+
+	/**
+	 * Function to get a list of allowed options to import.
+	 *
+	 * @return array $pmpro_options An array of allowed options to be imported.
+	 */
+	private static function allowed_options() {
+		$pmpro_options = array(
+			'hide_toolbar',
+			'block_dashboard',
+			'nonmembertext',
+			'notloggedintext',
+			'rsstext',
+			'filterqueries',
+			'showexcerpts',
+			'tospage',
+			'spamprotection',
+			'recaptcha',
+			'recaptcha_version',
+			'recaptcha_publickey',
+			'recaptcha_privatekey',
+			'maxnotificationproiority',
+			'activity_email_frequency',
+			'hideads',
+			'wisdom_opt_out',
+			'hideadslevels',
+			'redirecttosubscription',
+			'uninstall',
+			'currency',
+			'ssl_seal',
+			'instructions',
+			'tax_state',
+			'tax_rate',
+			'accepted_credit_cards',
+			'gateway',
+			'gateway_environment'
+		);
+
+		$pmpro_options = apply_filters( 'pmpro_toolkit_allowed_import_options', $pmpro_options );
+
+		return self::helper_prepend_pmpro_to_option_names( $pmpro_options );
 	}
 }
