@@ -239,7 +239,6 @@ class PMProDev_Migration_Assistant {
 		// Create a list of payment settings option names.
 		$payment_settings_names = array(
 			'currency',
-			'ssl_seal',
 			'instructions',
 			'tax_state',
 			'tax_rate',
@@ -409,7 +408,6 @@ class PMProDev_Migration_Assistant {
 			'redirecttosubscription',
 			'uninstall',
 			'currency',
-			'ssl_seal',
 			'instructions',
 			'tax_state',
 			'tax_rate',
