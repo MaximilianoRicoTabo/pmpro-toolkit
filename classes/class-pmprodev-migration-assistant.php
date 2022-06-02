@@ -328,6 +328,7 @@ class PMProDev_Migration_Assistant {
 	 * @param array $import_data The import data to add.
 	 */
 	private static function helper_import_to_options( $import_data ) {
+		$allowed_options = self::allowed_options();
 		foreach ( $import_data as $option_name => $option_value ) {
 			// Make sure that option name begins with 'pmpro_'.
 			// If not, we don't want to import it.
@@ -336,7 +337,7 @@ class PMProDev_Migration_Assistant {
 			}
 			
 			// Make sure the option name exists/used in PMPro, otherwise don't import it.
-			if ( ! in_array( $option_name, self::allowed_options() ) ) {
+			if ( ! in_array( $option_name, $allowed_options ) ) {
 				continue;
 			}
 
