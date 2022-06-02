@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Singleton class for handling PMPro settings exports.
+ * Migration Assistant class.
  */
 class PMProDev_Migration_Assistant {
 	/**

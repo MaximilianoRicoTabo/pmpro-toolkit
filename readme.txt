@@ -1,9 +1,9 @@
 === Paid Memberships Pro - Developer's Toolkit Add On ===
 Contributors: strangerstudios, jessica o
 Tags: paid memberships pro, pmpro, debug, developer, toolkit
-Requires at least: 4
-Tested up to: 5.9
-Stable tag: 0.6.1
+Requires at least: 5.0
+Tested up to: 6.0
+Stable tag: 0.7
 
 Adds various tools and settings to aid in the development of Paid Memberships Pro enabled websites.
 
@@ -29,6 +29,10 @@ Features:
 Please post it in the issues section of GitHub and we'll fix it as soon as we can. Thanks for helping. https://github.com/strangerstudios/pmpro-toolkit/issues
 
 == Changelog ==
+= 0.7 - 2022-06-02 =
+* SECURITY: Improved data sanitization and escaping in various areas of the plugin.
+* ENHANCEMENT: Added Import and Export functionality. Data to import or export between sites are as follows: membership levels, Email Templates, Payment & SSL Settings and Advanced Settings.
+
 = 0.6.1 - 2021-12-27
 * BUG FIX/ENHANCEMENT: Added third $cancel_level_id parameter to the pmpro_after_change_membership_level action.
 
