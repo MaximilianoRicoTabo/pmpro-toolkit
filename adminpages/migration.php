@@ -47,6 +47,7 @@
 			'email_templates' => __( 'Email Templates', 'pmpro-toolkit' ),
 			'payment'		  => __( 'Payment & SSL Settings', 'pmpro-toolkit' ),
 			'advanced'        => __( 'Advanced Settings', 'pmpro-toolkit' ),
+			'user_fields'	  => __( 'User Fields Settings', 'pmpro-toolkit' )
 		);
 		foreach ( $export_options as $key => $label ) {
 			echo '<p><input type="checkbox" name="pmprodev_export_options[]" value="' . esc_attr( $key ) . '" id="pmprodev_export_options_' . esc_attr( $key ) . '" /> <label for="pmprodev_export_options_' . esc_attr( $key ) . '">' . esc_html( $label ) . '</label></p>';
