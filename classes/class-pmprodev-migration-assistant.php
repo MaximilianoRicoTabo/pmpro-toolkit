@@ -366,7 +366,7 @@ class PMProDev_Migration_Assistant {
 
 			$option_value = maybe_unserialize( $option_value );
 
-			if ( ! is_object( $option_value ) ) {
+			if ( ! is_object( $option_value ) && ! is_array( $option_value ) ) {
 				$option_value = wp_kses_post( $option_value );
 			}
 
