@@ -364,12 +364,17 @@ class PMProDev_Migration_Assistant {
 				continue;
 			}
 
-			$option_value = maybe_unserialize( $option_value );
-
-			if ( ! is_object( $option_value ) && ! is_array( $option_value ) ) {
-				$option_value = wp_kses_post( $option_value );
+			if ( ! is_array( $option_value ) ) {
+				$option_value = wp_kses_post( $option_value ); // Sanitize using wp_kses_post in case there is some JS or something along those lines in the options.
+			} else {
+				$option_value = array_map( 'sanitize_text_field', $option_value ); // Default to sanitize_text_field for arrays.
 			}
 
+			// If the option name is 'pmpro_user_fields_settings', we need to unserialize the value before storing it. Sanitized earlier above this.
+			if ( $option_name === 'pmpro_user_fields_settings' ) {
+				$option_value = maybe_unserialize( $option_value );
+			}
+	
 			update_option( $option_name, $option_value );
 		}
 	}
