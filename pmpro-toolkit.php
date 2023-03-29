@@ -13,21 +13,24 @@
  * Globals
  */
 global $pmprodev_options, $gateway;
-
+$default_options = array(
+    'expire_memberships' => '',
+    'expiration_warnings' => '',
+    'credit_card_expiring' => '',
+    'ipn_debug' => '',
+    'authnet_silent_post_debug' => '',
+    'stripe_webhook_debug' => '',
+    'ins_debug' => '',
+    'redirect_email' => '',
+    'checkout_debug_email' => '',
+    'checkout_debug_when' => '',
+    'view_as_enabled' => false
+);
 $pmprodev_options = get_option('pmprodev_options');
 if(empty($pmprodev_options)) {
-    $pmprodev_options = array(
-        'expire_memberships' => '',
-        'expiration_warnings' => '',
-        'credit_card_expiring' => '',
-        'ipn_debug' => '',
-        'authnet_silent_post_debug' => '',
-        'stripe_webhook_debug' => '',
-        'ins_debug' => '',
-        'redirect_email' => '',
-        'checkout_debug_email' => '',
-        'view_as_enabled' => false
-    );
+    $pmprodev_options = $default_options;
+} else {
+    $pmprodev_options = array_merge( $default_options, $pmprodev_options );
 }
 
 define( 'PMPRODEV_DIR', dirname( __FILE__ ) );
@@ -79,21 +82,49 @@ add_filter('pmpro_email_recipient', 'pmprodev_redirect_emails', 10, 2);
 
 /*
  * Send debug email every time checkout page is hit.
+ * @param mixed $filter_contents to not break the wp_redirect filter.
  */
-function pmprodev_checkout_debug_email($level) {
+function pmprodev_checkout_debug_email( $filter_contents = null ) {
 
-    global $pmprodev_options, $current_user, $wpdb;
+    global $pmprodev_options, $current_user, $wpdb, $pmpro_msg, $pmpro_msgt;
 
-    if(empty($pmprodev_options['checkout_debug_email']))
-        return $level;
+    // Make sure this is the checkout page.
+    if( ! pmpro_is_checkout() ) {
+        return $filter_contents;
+    }
+    
+    // Make sure they have turned this on.
+    if( empty( $pmprodev_options['checkout_debug_when'] ) ) {
+        return $filter_contents;
+    }
 
+    // Make sure we have an email to use.
+    if( empty( $pmprodev_options['checkout_debug_email'] ) ) {
+        return $filter_contents;
+    }
+
+    // Make sure the checkout form was submitted if using that option.
+    if ( $pmprodev_options['checkout_debug_when'] === 'on_submit' && empty( $_REQUEST['submit-checkout'] ) ) {
+        return $filter_contents;
+    }    
+
+    // Make sure there is an error if using that option.
+    if ( $pmprodev_options['checkout_debug_when'] === 'on_error' && ( empty( $pmpro_msgt ) || $pmpro_msgt != 'pmpro_error' ) ) {
+        return $filter_contents;
+    }
+
+    // We're going to send an email. Make sure we don't send more than one.
+    $pmprodev_options['checkout_debug_when'] = false;
+
+    // Get some values.
+    $level = pmpro_getLevelAtCheckout();
     $email = new PMProEmail();
-
     if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
         $http = 'https://';
     else
         $http = 'http://';
 
+    // Set up the email.
     $email->subject = sprintf('%s Checkout Page Debug Log', get_bloginfo('name'));
     $email->email = $pmprodev_options['checkout_debug_email'];
     $email->template = 'checkout_debug';
@@ -101,11 +132,16 @@ function pmprodev_checkout_debug_email($level) {
     $email->data = array(
         'sitename' => get_bloginfo('sitename'),
         'checkout_url' => $http . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
-        'submit' => (empty($_REQUEST['submit=checkout']) ? 'no' : 'yes'),
+        'submit' => (empty($_REQUEST['submit-checkout']) ? 'no' : 'yes'),
         'level' => print_r($level, true),
         'user' => print_r($current_user->data, true),
-        'request' => print_r($_REQUEST, true)
+        'request' => print_r($_REQUEST, true),
+        'message_type' => (empty($pmpro_msgt) ? 'N/A' : $pmpro_msgt . '|'),
+        'message' => $pmpro_msg
     );
+
+    // Remove the password hash from the user data.
+    $email->data['user'] = preg_replace( "/\[user_pass[^\[]/", "", $email->data['user'] );
 
     $order = new MemberOrder();
     $order->getLastMemberOrder($current_user->user_id);
@@ -115,9 +151,12 @@ function pmprodev_checkout_debug_email($level) {
 
     $email->sendEmail();
 
-    return $level;
+    return $filter_contents;
 }
-add_filter('pmpro_checkout_level', 'pmprodev_checkout_debug_email');
+add_action( 'template_redirect', 'pmprodev_checkout_debug_email', 2 );
+add_filter( 'wp_redirect', 'pmprodev_checkout_debug_email', 100 );
+add_action( 'pmpro_membership_post_membership_expiry', 'pmprodev_checkout_debug_email' );
+add_action( 'shutdown', 'pmprodev_checkout_debug_email' );
 
 /*
  * View as specific Membership Level
@@ -254,19 +293,18 @@ add_action( 'admin_init', 'pmprodev_process_migration_export' );
  * @param array $pmprodev_options An array of POST values from the settings page.
  * @return array $sanitized_options A sanitized array of values (mirror of $pmprodev_options).
  */
-function pmprodev_sanitize_options( $pmprodev_options ) {
+function pmprodev_sanitize_options( $pmprodev_options ) {    
     $sanitized_options = array();
     foreach( $pmprodev_options as $option => $value ) {
-        if ( is_numeric( $value ) ) {
-            $sanitized_value = intval( $value );
-        } elseif ( strpos( $option, 'email' ) || strpos( $value, '@' ) ) {
+        if ( strpos( $option, 'email' ) !== false ) {
             $sanitized_value = sanitize_email( $value );
-        } else {
-            $sanitized_value = sanitize_text_field( $value );
+        } else {           
+            $sanitized_value = sanitize_text_field( $value );            
         }
         // Add the sanitized value
         $sanitized_options[$option] = $sanitized_value;
     }
+
     return $sanitized_options;
 }
 
@@ -293,7 +331,7 @@ function pmprodev_admin_init() {
 	add_settings_field( 'cron-credit-card-expiring', __( 'Credit Card Expirations', 'pmpro-toolkit' ), 'pmprodev_settings_cron_credit_card_expiring', 'pmprodev', 'pmprodev-cron' );
 
 	add_settings_field( 'ipn-debug', __( 'Gateway Callback Debug Email', 'pmpro-toolkit' ), 'pmprodev_settings_ipn_debug', 'pmprodev', 'pmprodev-gateway' );
-	add_settings_field( 'checkout_debug_email', __( 'Send Checkout Debug Email', 'pmpro-toolkit' ), 'pmprodev_settings_checkout_debug_email', 'pmprodev', 'pmprodev-gateway' );
+	add_settings_field( 'checkout_debug_email', __( 'Send Checkout Debug Email', 'pmpro-toolkit' ), 'pmprodev_settings_checkout_debug_email', 'pmprodev', 'pmprodev-gateway' );    
 
 	add_settings_field( 'view_as_enabled', __( 'Enable "View As" feature', 'pmpro-toolkit' ), 'pmprodev_settings_view_as_enabled', 'pmprodev', 'pmprodev-view-as' );
 }
