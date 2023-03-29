@@ -124,6 +124,18 @@ function pmprodev_checkout_debug_email( $filter_contents = null ) {
     else
         $http = 'http://';
 
+    // Remove password data.
+    $user_pass_bu = $current_user->user_pass;
+    $current_user->user_pass = '';    
+    if ( isset( $_REQUEST['password'] ) ) {
+        $password_bu = $_REQUEST['password'];
+        $_REQUEST['password'] = '';
+    }    
+    if ( isset( $_REQUEST['password2'] ) ) {
+        $password2_bu = $_REQUEST['password2'];
+        $_REQUEST['password2'] = '';
+    }
+
     // Set up the email.
     $email->subject = sprintf('%s Checkout Page Debug Log', get_bloginfo('name'));
     $email->email = $pmprodev_options['checkout_debug_email'];
@@ -139,9 +151,17 @@ function pmprodev_checkout_debug_email( $filter_contents = null ) {
         'message_type' => (empty($pmpro_msgt) ? 'N/A' : $pmpro_msgt . '|'),
         'message' => $pmpro_msg
     );
-
-    // Remove the password hash from the user data.
-    $email->data['user'] = preg_replace( "/\[user_pass[^\[]/", "", $email->data['user'] );
+    
+    // Add passwords back, just in case.
+    if ( isset( $user_pass_bu ) ) {
+        $current_user->user_pass = $user_pass_bu;
+    }
+    if ( isset( $password_bu ) ) {
+        $_REQUEST['password'] = $password_bu;
+    }
+    if ( isset( $user_pass_bu ) ) {
+        $_REQUEST['password2'] = $password2_bu;
+    }
 
     $order = new MemberOrder();
     $order->getLastMemberOrder($current_user->user_id);
