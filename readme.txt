@@ -3,7 +3,7 @@ Contributors: strangerstudios, jessica o
 Tags: paid memberships pro, pmpro, debug, developer, toolkit
 Requires at least: 5.0
 Tested up to: 6.2
-Stable tag: 0.8
+Stable tag: 0.8.1
 
 Adds various tools and settings to aid in the development of Paid Memberships Pro enabled websites.
 
@@ -29,6 +29,9 @@ Features:
 Please post it in the issues section of GitHub and we'll fix it as soon as we can. Thanks for helping. https://github.com/strangerstudios/pmpro-toolkit/issues
 
 == Changelog ==
+= 0.8.1 - 2023-04-08 =
+* BUG FIX: Fixed issue where the checkout debug feature interfered with redirects.
+
 = 0.8 - 2023-03-30 =
 * SECURITY: Now stripping password data from the checkout debug email. Even though this is a prerelease plugin and typically run on dev/staging sites, if you were running the debug email feature on a live site, we strongly encourage you to find those emails and delete them from your email.
 * FEATURE: Added a "when" option for the checkout debug emails. You can now set these emails to happen on all checkout page loads, only submissions, or only when an error is thrown.
