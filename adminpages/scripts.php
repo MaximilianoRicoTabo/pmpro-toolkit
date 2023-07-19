@@ -80,6 +80,8 @@
 	else
 		$copy_memberships_pages = false;
 
+	$delete_incomplete_orders = ! empty( $_POST['delete_incomplete_orders'] );
+
 	//clean member tables
 	if($clean_member_tables)
 	{
@@ -353,6 +355,21 @@
 		echo '</strong></p>';
 	}
 
+	// Delete incomplete orders.
+	if ( $delete_incomplete_orders ) {
+		echo '<p><strong>' . esc_html__( 'Deleting incomplete orders...', 'pmpro-toolkit' ) . '</strong></p>';
+		if ( empty( $_POST['delete_incomplete_orders_days'] ) && '0' !== $_POST['delete_incomplete_orders_days'] ) {
+			echo '<p>' . esc_html__( 'Please enter the number of days that token, pending, and review orders should be preserved.', 'pmpro-toolkit' ) . '</p>';
+		} elseif ( ! is_numeric( $_POST['delete_incomplete_orders_days'] ) ) {
+			echo '<p>' . esc_html__( 'Please enter a numeric value for the number of days that token, pending, and review orders should be preserved.', 'pmpro-toolkit' ) . '</p>';
+		} else {
+			$days    = intval( $_POST['delete_incomplete_orders_days'] );
+			$deleted = $wpdb->query( "DELETE FROM $wpdb->pmpro_membership_orders WHERE status IN('token', 'pending', 'review') AND timestamp < DATE_SUB(NOW(), INTERVAL $days DAY)" );
+			echo '<p>' . sprintf( esc_html__( 'Deleted %d orders.' ), (int)$deleted ) . '</p>';
+		}
+	}
+
+
 	?>
     <hr />
 
@@ -433,6 +450,12 @@
 		<p>
 			<input type="checkbox" id="copy_memberships_pages" name="copy_memberships_pages" value="1" /> 
 			<?php esc_html_e( 'Make all pages that require level ID', 'pmpro-toolkit' ); ?> <input type="text" name="copy_memberships_pages_a" value="" size="4" /> <?php esc_html_e( 'also require level ID', 'pmpro-toolkit' ); ?> <input type="text" name="copy_memberships_pages_b" value="" size="4" />.			
+		</p>
+
+		<hr />
+		<p>
+			<input type="checkbox" id="delete_incomplete_orders" name="delete_incomplete_orders" value="1" /> 
+			<?php printf( esc_html__( 'Delete all orders in token, pending, or review status and that are more than %s days old.', 'pmpro-toolkit' ), '<input type="text" name="delete_incomplete_orders_days" value="" size="4" />' ); ?>
 		</p>
 
 		<hr />
