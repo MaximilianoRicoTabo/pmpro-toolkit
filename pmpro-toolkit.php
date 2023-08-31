@@ -92,9 +92,14 @@ function pmprodev_checkout_debug_email( $filter_contents = null ) {
     if ( is_admin() || defined( 'DOING_AJAX' ) || pmpro_doing_webhook() ) {
         return $filter_contents;
     }
+    
+    // Avoid issues if we're redirecting too early before pmpro_is_checkout will work.
+    if ( ! did_action('wp') ) {
+        return $filter_contents;
+    }
 
     // Make sure this is the checkout page.
-    if( ! pmpro_is_checkout() ) {
+    if( ! function_exists( 'pmpro_is_checkout' ) || ! pmpro_is_checkout() ) {
         return $filter_contents;
     }
     
