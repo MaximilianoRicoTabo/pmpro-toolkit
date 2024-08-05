@@ -292,24 +292,31 @@ add_filter('pmpro_has_membership_level', 'pmprodev_view_as_has_membership_level'
  * Add settings page
  */
 function pmprodev_admin_menu() {
-    add_options_page('PMPro Toolkit Settings', 'PMPro Toolkit', apply_filters('pmpro_edit_member_capability', 'manage_options'), 'pmprodev', 'pmprodev_settings_page');	
-	add_management_page('PMPro Toolkit Scripts', 'PMPro Toolkit Scripts', 'manage_options', 'pmprodev-database-scripts', 'pmprodev_database_scripts_page');
-    add_management_page('PMPro Toolkit Migration Assistant', 'PMPro Toolkit Migration Assistant', 'manage_options', 'pmprodev-migration-assistant', 'pmprodev_migration_assistant_page');
+	$pmprodev_menu_text = __( 'Toolkit', 'pmpro-toolkit' );
+	add_submenu_page( 'pmpro-dashboard', $pmprodev_menu_text, $pmprodev_menu_text, 'manage_options',
+		'pmpro-toolkit', 'pmprodev_settings_page' );
+	$pmprodev_menu_text2 = __( 'Toolkit Scripts', 'pmpro-toolkit' );
+	add_submenu_page(  'pmpro-dashboard', $pmprodev_menu_text2, $pmprodev_menu_text2, 'manage_options',
+		'pmpro-dev-database-scripts', 'pmprodev_database_scripts_page');
+	$pmprodev_menu_text3 = __( 'Toolkit Migration Assistant', 'pmpro-toolkit' );
+    add_submenu_page(  'pmpro-dashboard',  $pmprodev_menu_text3, 'PMPro Toolkit Migration Assistant',
+		'manage_options', 'pmpro-dev-migration-assistant', 'pmprodev_migration_assistant_page');
 }
 add_action('admin_menu', 'pmprodev_admin_menu');
+add_action( 'admin_bar_menu', 'pmprodev_admin_menu_bar', 2000 );
 
-function pmprodev_database_scripts_page()
-{
-	require_once(dirname(__FILE__) . "/adminpages/scripts.php");
-}
-
-function pmprodev_migration_assistant_page()
-{
-	require_once(dirname(__FILE__) . "/adminpages/migration.php");
+function pmprodev_admin_menu_bar( $wp_admin_bar ) {
+	$wp_admin_bar->add_menu( array(
+		'id' => 'pmprodev',
+		'title' => 'PMPro Toolkit',
+		'href' => admin_url( 'admin.php?page=pmpro-toolkit' ),
+		'parent' => 'paid-memberships-pro',
+		'meta' => array( 'class' => 'pmpro-dev' )
+	) );
 }
 
 function pmprodev_process_migration_export() {
-    if ( ! empty( $_REQUEST['page'] ) && 'pmprodev-migration-assistant' === $_REQUEST['page'] && ! empty( $_REQUEST['pmprodev_export_options'] ) ) {
+    if ( ! empty( $_REQUEST['page'] ) && 'pmpro-dev-migration-assistant' === $_REQUEST['page'] && ! empty( $_REQUEST['pmprodev_export_options'] ) ) {
         PMProDev_Migration_Assistant::export( $_REQUEST['pmprodev_export_options'] );
     }
 }
@@ -368,8 +375,17 @@ function pmprodev_admin_init() {
 add_action('admin_init', 'pmprodev_admin_init');
 
 function pmprodev_settings_page() {
-    require_once(plugin_dir_path(__FILE__) . '/adminpages/settings.php');
+    require_once( plugin_dir_path( __FILE__ ) . '/adminpages/settings.php' );
 }
+
+function pmprodev_database_scripts_page() {
+	require_once( plugin_dir_path(__FILE__) . "/adminpages/scripts.php" );
+}
+
+function pmprodev_migration_assistant_page() {
+	require_once( plugin_dir_path(__FILE__) . "/adminpages/migration.php" );
+}
+
 function pmpro_toolkit_load_textdomain() {
 	// get the locale
 	$locale = apply_filters( 'plugin_locale', get_locale(), 'pmpro-toolkit' );

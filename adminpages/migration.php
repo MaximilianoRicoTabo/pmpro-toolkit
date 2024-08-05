@@ -6,13 +6,8 @@
 		} else {
 			$view = '';
 		}
-	?>
-	<nav class="nav-tab-wrapper">
-		<a href="<?php echo admin_url( 'options-general.php?page=pmprodev' );?>" class="nav-tab<?php if($view == 'pmprodev') { ?> nav-tab-active<?php } ?>"><?php esc_html_e('Toolkit Options', 'pmpro-toolkit' );?></a>
-		<a href="<?php echo admin_url( 'tools.php?page=pmprodev-database-scripts' );?>" class="nav-tab<?php if($view == 'pmprodev-database-scripts') { ?> nav-tab-active<?php } ?>"><?php esc_html_e('Database Scripts', 'pmpro-toolkit' );?></a>
-		<a href="<?php echo admin_url( 'tools.php?page=pmprodev-migration-assistant' );?>" class="nav-tab<?php if($view == 'pmprodev-migration-assistant') { ?> nav-tab-active<?php } ?>"><?php esc_html_e('Migration Assistant', 'pmpro-toolkit' );?></a>
-	</nav>
-	<?php
+		//Include nav tab wrapper
+		require_once   'nav-tab-wrapper.php';
 		// Check if the user submitted an import file.
 		if (
 			isset( $_FILES['pmprodev-import-file'] ) &&
