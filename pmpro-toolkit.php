@@ -205,6 +205,12 @@ add_action( 'shutdown', 'pmprodev_checkout_debug_email' );
  */
 
 //create cookie based on query string parameters
+/**
+ * Creates  a cookie based on query string parameters
+ *
+ * @return void
+ * @since TBD 
+ */
 function pmprodev_view_as_init() {
 
     global $current_user, $pmprodev_options;
@@ -217,16 +223,18 @@ function pmprodev_view_as_init() {
     if(!empty($view_as_level_ids) && !empty($pmprodev_options['view_as_enabled']) && current_user_can($membership_level_capability)) {
 
         //are we resetting the filter?
-        if($view_as_level_ids == 'r')
+        if($view_as_level_ids == 'r') {
             setcookie('pmprodev_view_as', '', 0);
-        else
-            setcookie('pmprodev_view_as', $view_as_level_ids, null);
+		} else {
+			$options = array();
+            setcookie( 'pmprodev_view_as', $view_as_level_ids, $options );
+		}
     }
 }
 add_action('init', 'pmprodev_view_as_init');
 
 //override pmpro_has_membership_access
-function pmprodev_view_as_access_filter($hasaccess, $post, $user, $levels) {
+function pmprodev_view_as_access_filter( $hasaccess, $post, $user, $levels ) {
 
     global $pmprodev_options;
 
@@ -307,12 +315,6 @@ function pmprodev_admin_menu() {
 	$pmprodev_menu_text = __( 'Toolkit', 'pmpro-toolkit' );
 	add_submenu_page( 'pmpro-dashboard', $pmprodev_menu_text, $pmprodev_menu_text, 'manage_options',
 		'pmpro-toolkit', 'pmprodev_settings_page' );
-	$pmprodev_menu_text2 = __( 'Toolkit Scripts', 'pmpro-toolkit' );
-	add_submenu_page(  'pmpro-dashboard', $pmprodev_menu_text2, $pmprodev_menu_text2, 'manage_options',
-		'pmpro-dev-database-scripts', 'pmprodev_database_scripts_page');
-	$pmprodev_menu_text3 = __( 'Toolkit Migration Assistant', 'pmpro-toolkit' );
-    add_submenu_page(  'pmpro-dashboard',  $pmprodev_menu_text3, 'PMPro Toolkit Migration Assistant',
-		'manage_options', 'pmpro-dev-migration-assistant', 'pmprodev_migration_assistant_page');
 }
 add_action('admin_menu', 'pmprodev_admin_menu');
 add_action( 'admin_bar_menu', 'pmprodev_admin_menu_bar', 2000 );
@@ -328,7 +330,8 @@ function pmprodev_admin_menu_bar( $wp_admin_bar ) {
 }
 
 function pmprodev_process_migration_export() {
-    if ( ! empty( $_REQUEST['page'] ) && 'pmpro-dev-migration-assistant' === $_REQUEST['page'] && ! empty( $_REQUEST['pmprodev_export_options'] ) ) {
+    if ( ! empty( $_REQUEST['page'] ) && 'pmpro-toolkit' === $_REQUEST['page'] && ! empty( $_REQUEST['section'] )
+	&& 'migration' === $_REQUEST['section'] && ! empty( $_REQUEST['pmprodev_export_options'] ) ) {
         PMProDev_Migration_Assistant::export( $_REQUEST['pmprodev_export_options'] );
     }
 }
@@ -337,14 +340,6 @@ add_action( 'admin_init', 'pmprodev_process_migration_export' );
 
 function pmprodev_settings_page() {
     require_once( plugin_dir_path( __FILE__ ) . '/adminpages/settings.php' );
-}
-
-function pmprodev_database_scripts_page() {
-	require_once( plugin_dir_path(__FILE__) . "/adminpages/scripts.php" );
-}
-
-function pmprodev_migration_assistant_page() {
-	require_once( plugin_dir_path(__FILE__) . "/adminpages/migration.php" );
 }
 
 function pmpro_toolkit_load_textdomain() {
@@ -379,3 +374,4 @@ function pmprodev_plugin_row_meta($links, $file) {
     return $links;
 }
 add_filter('plugin_row_meta', 'pmprodev_plugin_row_meta', 10, 2);
+
