@@ -16,7 +16,7 @@ $pmprodev_other_tables = array(
 	$wpdb->pmpro_memberships_pages,
 );
 
-$actions = array(
+$clean_up_actions = array(
 	'pmprodev_clean_member_tables'	=> array(
 		'label' => __( 'Clean member tables', 'pmpro-toolkit' ),
 		'description' => __( 'Delete all member data. (wp_pmpro_memberships_users, wp_pmpro_membership_orders, wp_pmpro_discount_codes_uses)', 'pmpro-toolkit' ),
@@ -46,27 +46,30 @@ $actions = array(
 		'label' => __( 'Clear report', 'pmpro-toolkit' ),
 		'description' => __( 'Clear visits, views, and logins report.', 'pmpro-toolkit' ),
 		'message' => __( 'Visits, Views, and Logins report cleared.', 'pmpro-toolkit' )
-	),
+	)
+);
+
+$level_actions = array(
 	'pmprodev_move_level' => array(
-        'label' => __( 'Move level', 'pmpro-toolkit' ),
-        'description' => __( 'Change all members with a specific level ID to another level ID. Will NOT cancel any recurring subscriptions.', 'pmpro-toolkit' ),
-        'message' => __( 'Users updated. Running pmpro_after_change_membership_level filter for all users...', 'pmpro-toolkit' )
-    ),
-    'pmprodev_give_level' => array(
-        'label' => __( 'Give level', 'pmpro-toolkit' ),
-        'description' => __( 'Give all non-members a specific level ID. This only gives users the level via the database and does NOT fire any pmpro_change_membership_level hooks.', 'pmpro-toolkit' ),
-        'message' => __( '%s users were given level %s', 'pmpro-toolkit' )
-    ),
-    'pmprodev_cancel_level' => array(
-        'label' => __( 'Cancel level', 'pmpro-toolkit' ),
-        'description' => __( 'Cancel all members with a specific level ID. WILL also cancel any recurring subscriptions.', 'pmpro-toolkit' ),
-        'message' => __( 'Cancelling users...', 'pmpro-toolkit' )
-    ),
-    'pmprodev_copy_memberships_pages' => array(
-        'label' => __( 'Copy memberships pages', 'pmpro-toolkit' ),
-        'description' => __( 'Make all pages that require a specific level ID also require another level ID.', 'pmpro-toolkit' ),
-        'message' => __( 'Require Membership options copied.', 'pmpro-toolkit' )
-    ),
+	'label' => __( 'Move level', 'pmpro-toolkit' ),
+	'description' => __( 'Change all members with a specific level ID to another level ID. Will NOT cancel any recurring subscriptions.', 'pmpro-toolkit' ),
+	'message' => __( 'Users updated. Running pmpro_after_change_membership_level filter for all users...', 'pmpro-toolkit' )
+	),
+	'pmprodev_give_level' => array(
+		'label' => __( 'Give level', 'pmpro-toolkit' ),
+		'description' => __( 'Give all non-members a specific level ID. This only gives users the level via the database and does NOT fire any pmpro_change_membership_level hooks.', 'pmpro-toolkit' ),
+		'message' => __( '%s users were given level %s', 'pmpro-toolkit' )
+	),
+	'pmprodev_cancel_level' => array(
+		'label' => __( 'Cancel level', 'pmpro-toolkit' ),
+		'description' => __( 'Cancel all members with a specific level ID. WILL also cancel any recurring subscriptions.', 'pmpro-toolkit' ),
+		'message' => __( 'Cancelling users...', 'pmpro-toolkit' )
+	),
+	'pmprodev_copy_memberships_pages' => array(
+		'label' => __( 'Copy memberships pages', 'pmpro-toolkit' ),
+		'description' => __( 'Make all pages that require a specific level ID also require another level ID.', 'pmpro-toolkit' ),
+		'message' => __( 'Require Membership options copied.', 'pmpro-toolkit' )
+	)
 );
 
 ?>
@@ -81,7 +84,7 @@ $actions = array(
 		<div class="pmpro_section_inside">
 
 			<form id="form-scripts" method="post" action="">
-				<?php wp_nonce_field( 'pmpro_toolkit_action', 'pmpro_toolkit_nonce' ); ?>
+				<?php wp_nonce_field( 'pmpro_toolkit_script_action', 'pmpro_toolkit_scripts_nonce' ); ?>
 				<p><?php esc_html_e( 'This feature allows you to either clear data from PMPro-related database tables and options
 				or to scrub member email and transaction id data to prevent real members from receiving updates or having their
 				subscriptions changed. Check the options that you would like to apply. The cleanup scripts will be run upon saving
@@ -97,7 +100,7 @@ $actions = array(
 				
 			<table class="form-table">
 				<tbody>
-				<?php foreach ( $actions as $action => $details ) : ?>
+				<?php foreach ( $clean_up_actions as $action => $details ) : ?>
 					<tr>
 						<th scope="row"><?php echo esc_html( $details['label'] ); ?></th>
 						<td>
@@ -126,7 +129,7 @@ $actions = array(
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Move users from one level to another.', 'pmpro-toolkit' ); ?></th>
 					<td>
-							<input type="checkbox" name="move_level" value="1">
+							<input type="checkbox" name="pmprodev_move_level" value="1">
 							<span><?php esc_html_e( 'From Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="move_level_a" value="">
 							<span><?php esc_html_e( 'To Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="move_level_b" value="">
 					</td>
@@ -135,7 +138,7 @@ $actions = array(
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Give users a specific level.', 'pmpro-toolkit' ); ?></th>
 					<td>
-							<input type="checkbox" name="give_level" value="1">
+							<input type="checkbox" name="pmprodev_give_level" value="1">
 							<span><?php esc_html_e( 'Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="give_level_id" value="">
 							<span><?php esc_html_e( 'Start Date:', 'pmpro-toolkit' ); ?></span> <input type="text" name="give_level_startdate" value="">
 							<span><?php esc_html_e( 'End Date:', 'pmpro-toolkit' ); ?></span> <input type="text" name="give_level_enddate" value="">
@@ -144,14 +147,14 @@ $actions = array(
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Cancel users with a specific level.', 'pmpro-toolkit' ); ?></th>
 					<td>
-							<input type="checkbox" name="cancel_level" value="1">
+							<input type="checkbox" name="pmprodev_cancel_level" value="1">
 							<span><?php esc_html_e( 'Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="cancel_level_id" value="">
 					</td>
 				</tr>
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Copy "Require Membership" pages from one level to another.', 'pmpro-toolkit' ); ?></th>
 					<td>
-							<input type="checkbox" name="copy_memberships_pages" value="1">
+							<input type="checkbox" name="pmprodev_copy_memberships_pages" value="1">
 							<span><?php esc_html_e( 'Copy From Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="copy_memberships_pages_from" value="">
 							<span><?php esc_html_e( 'Copy To Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="copy_memberships_pages_to" value="">
 					</td>
@@ -169,6 +172,8 @@ $actions = array(
 </div>
 <?php
 
+
+$actions = array_merge( $clean_up_actions, $level_actions );
 foreach ( $actions as $action => $options ) {
 	if ( ! empty( $_POST[ $action ] ) ) {
 		call_user_func( $action, $options[ 'message' ] );
