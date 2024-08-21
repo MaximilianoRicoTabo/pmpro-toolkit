@@ -17,32 +17,32 @@ $pmprodev_other_tables = array(
 );
 
 $actions = array(
-	'clean_member_tables'	=> array(
+	'pmprodev_clean_member_tables'	=> array(
 		'label' => __( 'Clean member tables', 'pmpro-toolkit' ),
 		'description' => __( 'Delete all member data. (wp_pmpro_memberships_users, wp_pmpro_membership_orders, wp_pmpro_discount_codes_uses)', 'pmpro-toolkit' ),
 		'message' => __( 'Member tables have been truncated.', 'pmpro-toolkit' ),
 	),
-	'clean_level_data'	=> array(
+	'pmprodev_clean_level_data'	=> array(
 		'label' => __( 'Clean level data', 'pmpro-toolkit' ),
 		'description' => __( 'Delete all level and discount code data. (wp_pmpro_discount_codes, wp_pmpro_discount_codes_levels, wp_pmpro_membership_levels, wp_pmpro_memberships_categories, wp_pmpro_memberships_pages)', 'pmpro-toolkit' ),
 		'message' => __( 'Level and discount code tables have been truncated.', 'pmpro-toolkit' )
 	),
-	'scrub_member_data'	=> array(
+	'pmprodev_scrub_member_data'	=> array(
 		'label' => __( 'Scrub member data', 'pmpro-toolkit' ),
 		'description' => __( 'Scrub member emails and transaction ids. Updates non-admins in wp_users and wp_pmpro_membership_orders tables. This may time out on slow servers or sites with large numbers of users.', 'pmpro-toolkit' ),
 		'message' => __( 'Scrubbing user data...', 'pmpro-toolkit' )
 	),
-	'delete_users'	=> array(
+	'pmprodev_delete_users'	=> array(
 		'label' => __( 'Delete users', 'pmpro-toolkit' ),
 		'description' => __( 'Delete non-admin users. (Deletes from wp_users and wp_usermeta tables directly.) This may time out on slow servers or sites with large numbers of users.', 'pmpro-toolkit' ),
 		'message' => __( 'Deleting non-admins...', 'pmpro-toolkit' )
 	),
-	'clean_pmpro_options'	=> array(
+	'pmprodev_clean_pmpro_options'	=> array(
 		'label' => __( 'Clean options', 'pmpro-toolkit' ),
 		'description' => __( 'Delete all PMPro options. (Any option prefixed with pmpro_ but not the DB version or PMPro page_id options.)', 'pmpro-toolkit' ),
 		'message' => __( 'Options deleted.', 'pmpro-toolkit' )
 	),
-	'clear_vvl_report'	=> array(
+	'pmprodev_clear_vvl_report'	=> array(
 		'label' => __( 'Clear report', 'pmpro-toolkit' ),
 		'description' => __( 'Clear visits, views, and logins report.', 'pmpro-toolkit' ),
 		'message' => __( 'Visits, Views, and Logins report cleared.', 'pmpro-toolkit' )
@@ -147,13 +147,6 @@ $actions = array(
 		</div>
 	</div>
 </div>
-<script>
-	jQuery( document ).ready( function( $ ) {
-		$( '.pmpro-datepicker' ).datepicker({
-			dateFormat: 'yy-mm-dd'
-		});
-	});
-</script>
 <?php
 
 foreach ( $actions as $action => $options ) {
@@ -162,7 +155,7 @@ foreach ( $actions as $action => $options ) {
 	}
 }
 
-function clean_member_tables( $message ) {
+function pmprodev_clean_member_tables( $message ) {
 	global $wpdb, $pmprodev_member_tables;
 	foreach ( $pmprodev_member_tables as $table ) {
 		$wpdb->query( "TRUNCATE $table" );
@@ -170,7 +163,7 @@ function clean_member_tables( $message ) {
 	pmprodev_output_message( $message );
 }
 
-function clean_level_data( $message ) {
+function pmprodev_clean_level_data( $message ) {
 	global $wpdb, $pmprodev_other_tables;
 	foreach ( $pmprodev_other_tables as $table ) {
 		$wpdb->query( "TRUNCATE $table" );
@@ -178,7 +171,7 @@ function clean_level_data( $message ) {
 	pmprodev_output_message( $message );
 }
 
-function scrub_member_data( $message ) {
+function pmprodev_scrub_member_data( $message ) {
 	global $wpdb;
 	pmprodev_output_message( $message );
 	$user_ids = $wpdb->get_col( "SELECT ID FROM {$wpdb->users} WHERE user_email NOT LIKE '%+scrub%'" );
@@ -200,7 +193,7 @@ function scrub_member_data( $message ) {
 	pmprodev_process_complete();
 }
 
-function delete_users( $message ) {
+function pmprodev_delete_users( $message ) {
 	global $wpdb;
 	pmprodev_output_message( $message );
 	$user_ids = $wpdb->get_col( "SELECT ID FROM {$wpdb->users}" );
@@ -214,7 +207,7 @@ function delete_users( $message ) {
 	pmprodev_process_complete();
 }
 
-function clean_pmpro_options( $message ) {
+function pmprodev_clean_pmpro_options( $message ) {
 	delete_option( 'pmpro_db_version' );
 	delete_option( 'pmpro_membership_levels' );
 	delete_option( 'pmpro_non_member_page_settings' );
@@ -242,7 +235,7 @@ function clean_pmpro_options( $message ) {
 	pmprodev_output_message( $message );
 }
 
-function clear_vvl_report( $message ) {
+function pmprodev_clear_vvl_report( $message ) {
 	global $wpdb;
 	$wpdb->query( "TRUNCATE {$wpdb->pmpro_visits}" );
 	$wpdb->query( "TRUNCATE {$wpdb->pmpro_views}" );
