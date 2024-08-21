@@ -147,6 +147,13 @@ $actions = array(
 		</div>
 	</div>
 </div>
+<script>
+	jQuery( document ).ready( function( $ ) {
+		$( '.pmpro-datepicker' ).datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+	});
+</script>
 <?php
 
 foreach ( $actions as $action => $options ) {
