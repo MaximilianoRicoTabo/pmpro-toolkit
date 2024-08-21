@@ -47,6 +47,26 @@ $actions = array(
 		'description' => __( 'Clear visits, views, and logins report.', 'pmpro-toolkit' ),
 		'message' => __( 'Visits, Views, and Logins report cleared.', 'pmpro-toolkit' )
 	),
+	'pmprodev_move_level' => array(
+        'label' => __( 'Move level', 'pmpro-toolkit' ),
+        'description' => __( 'Change all members with a specific level ID to another level ID. Will NOT cancel any recurring subscriptions.', 'pmpro-toolkit' ),
+        'message' => __( 'Users updated. Running pmpro_after_change_membership_level filter for all users...', 'pmpro-toolkit' )
+    ),
+    'pmprodev_give_level' => array(
+        'label' => __( 'Give level', 'pmpro-toolkit' ),
+        'description' => __( 'Give all non-members a specific level ID. This only gives users the level via the database and does NOT fire any pmpro_change_membership_level hooks.', 'pmpro-toolkit' ),
+        'message' => __( '%s users were given level %s', 'pmpro-toolkit' )
+    ),
+    'pmprodev_cancel_level' => array(
+        'label' => __( 'Cancel level', 'pmpro-toolkit' ),
+        'description' => __( 'Cancel all members with a specific level ID. WILL also cancel any recurring subscriptions.', 'pmpro-toolkit' ),
+        'message' => __( 'Cancelling users...', 'pmpro-toolkit' )
+    ),
+    'pmprodev_copy_memberships_pages' => array(
+        'label' => __( 'Copy memberships pages', 'pmpro-toolkit' ),
+        'description' => __( 'Make all pages that require a specific level ID also require another level ID.', 'pmpro-toolkit' ),
+        'message' => __( 'Require Membership options copied.', 'pmpro-toolkit' )
+    ),
 );
 
 ?>
@@ -240,6 +260,105 @@ function pmprodev_clear_vvl_report( $message ) {
 	$wpdb->query( "TRUNCATE {$wpdb->pmpro_visits}" );
 	$wpdb->query( "TRUNCATE {$wpdb->pmpro_views}" );
 	$wpdb->query( "TRUNCATE {$wpdb->pmpro_logins}" );
+	pmprodev_output_message( $message );
+}
+
+
+// Move level function
+function pmprodev_move_level( $message ) {
+	global $wpdb;
+
+	pmprodev_output_message( $message );
+
+	$from_level_id = intval( $_REQUEST['move_level_a'] );
+	$to_level_id = intval( $_REQUEST['move_level_b'] );
+
+	if ( $from_level_id < 1 || $to_level_id < 1 ) {
+		pmprodev_output_message( __( 'Please enter a level ID > 1 for each option.', 'pmpro-toolkit' ) );
+	} else {
+		$user_ids = $wpdb->get_col( "SELECT user_id FROM $wpdb->pmpro_memberships_users WHERE membership_id = $from_level_id AND status = 'active'" );
+
+		if ( empty( $user_ids ) ) {
+			pmprodev_output_message( sprintf( __( 'Couldn\'t find users with level ID %d.', 'pmpro-toolkit' ), $from_level_id ) );
+		} else {
+			$wpdb->query( "UPDATE $wpdb->pmpro_memberships_users SET membership_id = $to_level_id WHERE membership_id = $from_level_id AND status = 'active';" );
+
+			foreach ( $user_ids as $user_id ) {
+				do_action( 'pmpro_after_change_membership_level', $to_level_id, $user_id, $from_level_id );
+			}
+
+			pmprodev_process_complete();
+		}
+	}
+}
+
+// Give level function
+function pmprodev_give_level( $message ) {
+	global $wpdb;
+
+	$give_level_id = intval( $_REQUEST['give_level_id'] );
+	$give_level_startdate = sanitize_text_field( $_REQUEST['give_level_startdate'] );
+	$give_level_enddate = sanitize_text_field( $_REQUEST['give_level_enddate'] );
+
+	if ( $give_level_id < 1 || empty( $give_level_startdate ) ) {
+		pmprodev_output_message( __( 'Please enter a valid level ID and start date.', 'pmpro-toolkit' ) );
+	} else {
+		$sqlQuery = $wpdb->prepare(
+			"INSERT INTO {$wpdb->pmpro_memberships_users} (user_id, membership_id, status, startdate, enddate)
+			SELECT u.ID, %d, 'active', %s, %s
+			FROM {$wpdb->users} u 
+			LEFT JOIN {$wpdb->pmpro_memberships_users} mu
+			ON u.ID = mu.user_id 
+			AND mu.status = 'active' 
+			WHERE mu.id IS NULL;",
+			$give_level_id,
+			$give_level_startdate,
+			$give_level_enddate
+		);
+
+		$wpdb->query( $sqlQuery );
+
+		pmprodev_output_message( $message );
+	}
+}
+
+// Cancel level function
+function pmprodev_cancel_level( $message ) {
+	global $wpdb;
+
+	pmprodev_output_message( $message );
+
+	$cancel_level_id = intval( $_REQUEST['cancel_level_id'] );
+	$user_ids = $wpdb->get_col( "SELECT user_id FROM $wpdb->pmpro_memberships_users WHERE membership_id = $cancel_level_id AND status = 'active'" );
+
+	if ( empty( $user_ids ) ) {
+		pmprodev_output_message( sprintf( __( 'Couldn\'t find users with level ID %d.', 'pmpro-toolkit' ), $cancel_level_id ) );
+	} else {
+		pmprodev_output_message( sprintf( __( 'Cancelling %s users...', 'pmpro-toolkit' ), count( $user_ids ) ) );
+		foreach ( $user_ids as $user_id ) {
+			pmpro_cancelMembershipLevel( $cancel_level_id, $user_id );
+		}
+
+		pmprodev_process_complete();
+	}
+}
+
+// Copy memberships pages function
+function pmprodev_copy_memberships_pages( $message ) {
+	global $wpdb;
+
+	$from_level_id = intval( $_REQUEST['copy_memberships_pages_a'] );
+	$to_level_id = intval( $_REQUEST['copy_memberships_pages_b'] );
+
+	$wpdb->query(
+		$wpdb->prepare(
+			"INSERT IGNORE INTO {$wpdb->pmpro_memberships_pages} (membership_id, page_id) 
+			SELECT %d, page_id FROM {$wpdb->pmpro_memberships_pages} WHERE membership_id = %d",
+			$to_level_id,
+			$from_level_id
+		)
+	);
+
 	pmprodev_output_message( $message );
 }
 
