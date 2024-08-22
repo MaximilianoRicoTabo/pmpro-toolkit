@@ -12,6 +12,8 @@ $pmprodev_other_tables = array(
 	$wpdb->pmpro_discount_codes,
 	$wpdb->pmpro_discount_codes_levels,
 	$wpdb->pmpro_membership_levels,
+	$wpdb->pmpro_groups,
+	$wpdb->pmpro_membership_levels_groups,
 	$wpdb->pmpro_memberships_categories,
 	$wpdb->pmpro_memberships_pages,
 );
@@ -23,8 +25,9 @@ $clean_up_actions = array(
 		'message' => __( 'Member tables have been truncated.', 'pmpro-toolkit' ),
 	),
 	'pmprodev_clean_level_data'	=> array(
-		'label' => __( 'Clean level data', 'pmpro-toolkit' ),
-		'description' => __( 'Delete all level and discount code data. (wp_pmpro_discount_codes, wp_pmpro_discount_codes_levels, wp_pmpro_membership_levels, wp_pmpro_memberships_categories, wp_pmpro_memberships_pages)', 'pmpro-toolkit' ),
+		'label' => __( 'Clean group and level data', 'pmpro-toolkit' ),
+		'description' => __( 'Delete all groups, level and discount code data. (wp_pmpro_discount_codes, wp_pmpro_discount_codes_levels, wp_pmpro_membership_levels, wp_pmpro_groups,
+		wp_pmpro_membership_levels_groups, wp_pmpro_memberships_categories, wp_pmpro_memberships_pages)', 'pmpro-toolkit' ),
 		'message' => __( 'Level and discount code tables have been truncated.', 'pmpro-toolkit' )
 	),
 	'pmprodev_scrub_member_data'	=> array(

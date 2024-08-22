@@ -61,7 +61,7 @@
 
 			<?php
 			$export_options = [
-				'levels'          => __( 'Membership Levels', 'pmpro-toolkit' ),
+				'groups_and_levels' => __( 'Membership Group and Levels', 'pmpro-toolkit' ),
 				'email_templates' => __( 'Email Templates', 'pmpro-toolkit' ),
 				'payment'         => __( 'Payment & SSL Settings', 'pmpro-toolkit' ),
 				'advanced'        => __( 'Advanced Settings', 'pmpro-toolkit' ),
