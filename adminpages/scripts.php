@@ -176,6 +176,12 @@ $level_actions = array(
 $actions = array_merge( $clean_up_actions, $level_actions );
 foreach ( $actions as $action => $options ) {
 	if ( ! empty( $_POST[ $action ] ) ) {
+		//Check nonce
+		if ( ! isset( $_POST['pmpro_toolkit_scripts_nonce'] ) ||
+		! check_admin_referer( 'pmpro_toolkit_script_action', 'pmpro_toolkit_scripts_nonce' ) ) {
+			pmprodev_output_message( __( 'Security check failed.', 'pmpro-toolkit' ), 'error' );
+			return;
+		}
 		call_user_func( $action, $options[ 'message' ] );
 	}
 }
@@ -367,8 +373,8 @@ function pmprodev_copy_memberships_pages( $message ) {
 	pmprodev_output_message( $message );
 }
 
-function pmprodev_output_message( $message ) {
-	echo '<div class="notice notice-success is-dismissible"><p>' . esc_html( $message ) . '</p></div>';
+function pmprodev_output_message( $message, $type = 'success' ) {
+	echo '<div class="notice notice-' . esc_attr( $type ) . ' is-dismissible"><p>' . esc_html( $message ) . '</p></div>';
 }
 
 function pmprodev_process_complete() {
