@@ -114,16 +114,19 @@ class PMProDev_Migration_Assistant {
 
 	/**
 	 * Get levels export data.
+	 * Get groups and levels export data.
 	 *
 	 * @since 0.7
 	 *
-	 * @return array The levels export data.
+	 * @return array The groups and levels export data.
 	 */
-	private static function build_export_data_levels() {
+	private static function build_export_data_groups_and_levels() {
 		global $wpdb;
 
 		// Get all levels.
 		$levels = pmpro_getAllLevels( true ); // True to include hidden levels.
+		//Get groups
+		$groups = $wpdb->get_results( "SELECT * FROM $wpdb->pmpro_groups" );
 
 		// Get metadata for all levels.
 		$level_metadata = $wpdb->get_results( "SELECT * FROM $wpdb->pmpro_membership_levelmeta" );
@@ -144,73 +147,122 @@ class PMProDev_Migration_Assistant {
 
 		// Get rid of references to current level ID which will likely change at import.
 		$levels = array_values( $levels );
-		foreach ( $levels as $level ) {
-			unset( $level->id );
+		$groups = array_values( $groups );
+
+		require_once( 'class-pmprodev-group-dto.php' );
+
+		$ret = array();
+		// Build the DTOs for groups and levels.
+		foreach ( $groups as $group ) {
+			$levelsDTO = array();
+			foreach ( $levels as $level ) {
+				if ( self::level_belongs_to_group( intval( $level->id ), intval( $group->id ) ) ) {
+					array_push( $levelsDTO, $level );
+				}
+			}
+
+			$groupDTO = new GroupDTOClass( $group, $levelsDTO );
+			array_push( $ret, $groupDTO );
 		}
 
-		// Return the levels export data.
-		return $levels;
+		//remove id from levels and groups, it can't be done in the loop above because it throws an error.
+		foreach ( $ret as $groupDTO ) {
+			foreach ( $groupDTO->levels as $level ) {
+				unset( $level->id );
+			}
+			unset( $groupDTO->group->id );
+		}
+
+		// Return the groups and levels export data.
+		return $ret;
 	}
 
 	/**
-	 * Import levels data.
-	 *
-	 * This method will always create new levels and not
-	 * overwrite existing levels.
+	 * Import level and groups data.
 	 *
 	 * @since 0.7
 	 *
-	 * @param array $levels_data The levels to import.
+	 * @param array $groupDTOs An The groups and levels to import.
 	 *
 	 * @return string|null The error message, if any, or null if no error.
 	 */
-	private static function import_data_levels( $levels_data ) {
+	private static function import_data_groups_and_levels( $groupDTOs ) {
 		global $wpdb;
 
-		// Import the levels.
-		foreach ( $levels_data as $level ) {
-			// Add the data to the pmpro_membership_levels table.
+		// Iterate over each group and level and import them.
+		foreach ( $groupDTOs as $groupDTO ) {
+			// Add the group to the pmpro_groups table.
 			pmpro_insert_or_replace(
-				$wpdb->pmpro_membership_levels,
+				$wpdb->pmpro_groups,
 				array(
-					'name' => $level['name'],
-					'description' => $level['description'],
-					'confirmation' => $level['confirmation'],
-					'initial_payment' => $level['initial_payment'],
-					'billing_amount' => $level['billing_amount'],
-					'cycle_number' => $level['cycle_number'],
-					'cycle_period' => $level['cycle_period'],
-					'billing_limit' => $level['billing_limit'],
-					'trial_amount' => $level['trial_amount'],
-					'trial_limit' => $level['trial_limit'],
-					'expiration_number' => $level['expiration_number'],
-					'expiration_period' => $level['expiration_period'],
-					'allow_signups' => $level['allow_signups'],
+					'name' => $groupDTO['group']['name'],
+					'allow_multiple_selections' => $groupDTO['group']['allow_multiple_selections'],
+					'displayorder' => $groupDTO['group']['displayorder'],
 				),
 				array(
 					'%s',		//name
-					'%s',		//description
-					'%s',		//confirmation
-					'%f',		//initial_payment
-					'%f',		//billing_amount
-					'%d',		//cycle_number
-					'%s',		//cycle_period
-					'%d',		//billing_limit
-					'%f',		//trial_amount
-					'%d',		//trial_limit
-					'%d',		//expiration_number
-					'%s',		//expiration_period
-					'%d',		//allow_signups
+					'%d',		//allow_multiple_selections
+					'%d',		//displayorder
 				)
 			);
+			// Get the ID of the group we just imported.
+			$group_id = $wpdb->insert_id;
 
-			// Get the ID of the level we just imported.
-			$level_id = $wpdb->insert_id;
-
-			// Add the level's metadata to the pmpro_membership_levelmeta table.
-			if ( isset( $level['metadata'] ) ) {
-				foreach ( $level['metadata'] as $meta_key => $meta_value ) {
-					update_pmpro_membership_level_meta( $level_id, $meta_key, $meta_value );
+			$levels = $groupDTO['levels'];
+			foreach ( $levels as $level ) {
+				// Add the data to the pmpro_membership_levels table.
+				pmpro_insert_or_replace(
+					$wpdb->pmpro_membership_levels,
+					array(
+						'name' => $level['name'],
+						'description' => $level['description'],
+						'confirmation' => $level['confirmation'],
+						'initial_payment' => $level['initial_payment'],
+						'billing_amount' => $level['billing_amount'],
+						'cycle_number' => $level['cycle_number'],
+						'cycle_period' => $level['cycle_period'],
+						'billing_limit' => $level['billing_limit'],
+						'trial_amount' => $level['trial_amount'],
+						'trial_limit' => $level['trial_limit'],
+						'expiration_number' => $level['expiration_number'],
+						'expiration_period' => $level['expiration_period'],
+						'allow_signups' => $level['allow_signups'],
+					),
+					array(
+						'%s',		//name
+						'%s',		//description
+						'%s',		//confirmation
+						'%f',		//initial_payment
+						'%f',		//billing_amount
+						'%d',		//cycle_number
+						'%s',		//cycle_period
+						'%d',		//billing_limit
+						'%f',		//trial_amount
+						'%d',		//trial_limit
+						'%d',		//expiration_number
+						'%s',		//expiration_period
+						'%d',		//allow_signups
+					)
+				);
+				// Get the ID of the level we just imported.
+				$level_id = $wpdb->insert_id;
+				// Add the level to the pmpro_membership_levels_groups table.
+				pmpro_insert_or_replace(
+					$wpdb->pmpro_membership_levels_groups,
+					array(
+						'group' => $group_id,
+						'level' => $level_id,
+					),
+					array(
+						'%d',		//group
+						'%d',		//level
+					)
+				);
+				// Add the level's metadata to the pmpro_membership_levelmeta table.
+				if ( isset( $level['metadata'] ) ) {
+					foreach ( $level['metadata'] as $meta_key => $meta_value ) {
+						update_pmpro_membership_level_meta( $level_id, $meta_key, $meta_value );
+					}
 				}
 			}
 		}
@@ -455,5 +507,20 @@ class PMProDev_Migration_Assistant {
 		$pmpro_options = apply_filters( 'pmpro_toolkit_allowed_import_options', $pmpro_options );
 
 		return self::helper_prepend_pmpro_to_option_names( $pmpro_options );
+	}
+
+	/**
+	 * Whether a level belongs to a group or not.
+	 *
+	 * @param int $level_id The ID of the level.
+	 * @param int $group_id The ID of the group.
+	 * @return bool True if the level belongs to the group, false otherwise.
+	 * @since TBD
+	 */
+	private static function level_belongs_to_group( $level_id, $group_id ) {
+		global $wpdb;
+		$sql = $wpdb->prepare( "SELECT id FROM $wpdb->pmpro_membership_levels_groups lg WHERE lg.group = %d AND lg.level = %d", $group_id, $level_id );
+		$group_levels = $wpdb->get_row( $sql );
+		return  !empty( $group_levels );
 	}
 }

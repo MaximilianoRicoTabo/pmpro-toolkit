@@ -14,6 +14,8 @@ $pmprodev_other_tables = array(
 	$wpdb->pmpro_discount_codes,
 	$wpdb->pmpro_discount_codes_levels,
 	$wpdb->pmpro_membership_levels,
+	$wpdb->pmpro_groups,
+	$wpdb->pmpro_membership_levels_groups,
 	$wpdb->pmpro_memberships_categories,
 	$wpdb->pmpro_memberships_pages,
 );
