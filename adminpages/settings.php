@@ -205,6 +205,7 @@
 			<div class="pmpro_section_inside">
 				<?php
 					global $wpdb;
+					$docs_link = 'https://www.paidmembershipspro.com/documentation/content-controls/view-as-feature/';
 					// get example level info
 					$level = $wpdb->get_row( 'SELECT * FROM ' . $wpdb->pmpro_membership_levels . ' LIMIT 1' );
 					if( ! empty( $level ) ) {
@@ -213,7 +214,8 @@
 						$example_link = '<a href="' . add_query_arg( 'pmprodev_view_as', $level_id, home_url() ) . '">' . add_query_arg( 'pmprodev_view_as', $level_id, home_url() ) . '</a>';
 				?>
 				<p>
-					<?php esc_html_e( 'Enabling "View as..." will allow admins to view any page as if they had any membership level(s) for a brief period of time.', 'pmpro-toolkit' ); ?>
+					<?php echo sprintf( __( 'The "View As..." feature allows you to view your site as if you had a specific membership level. %sLearn more%s.', 'pmpro-toolkit' ), '<a href="' . $docs_link . '" target="_blank">', '</a>' ); ?>
+
 				</p>
 				<p>
 					<?php echo sprintf( esc_html__( 'To use it, add the query string parameter %s to your URL, passing a series of level IDs separated by hyphens.', 'pmpro-toolkit' ), '<code>pmprodev_view_as</code>' ); ?>
