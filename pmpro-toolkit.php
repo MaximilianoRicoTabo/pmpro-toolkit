@@ -63,16 +63,35 @@ function pmprodev_gateway_debug_setup() {
 
 	global $pmprodev_options;
 
-	//unhook crons
-	if( !empty($pmprodev_options['expire_memberships'] ) ) {
-		remove_action("pmpro_cron_expire_memberships", "pmpro_cron_expire_memberships");
+	//define IPN/webhook debug emails
+	if( !empty( $pmprodev_options['ipn_debug']) && !defined( 'PMPRO_IPN_DEBUG' ) ) {
+		define( 'PMPRO_IPN_DEBUG', $pmprodev_options['ipn_debug'] );
 	}
-	if( !empty($pmprodev_options['expiration_warnings'] ) )	{
+
+	if( !empty( $pmprodev_options['ipn_debug']) && !defined( 'PMPRO_AUTHNET_SILENT_POST_DEBUG' ) ) {
+		define( 'PMPRO_AUTHNET_SILENT_POST_DEBUG', $pmprodev_options['ipn_debug'] );
+	}
+
+	if( !empty( $pmprodev_options['ipn_debug']) && !defined( 'PMPRO_STRIPE_WEBHOOK_DEBUG' ) ) {
+		define( 'PMPRO_STRIPE_WEBHOOK_DEBUG', $pmprodev_options['ipn_debug'] );
+	}
+
+	if( !empty( $pmprodev_options['ipn_debug']) && !defined( 'PMPRO_INS_DEBUG' ) ) {
+		define( 'PMPRO_INS_DEBUG', $pmprodev_options['ipn_debug'] );
+	}
+
+	//unhook crons
+	if( !empty( $pmprodev_options['expire_memberships'] ) ) {
+		remove_action( "pmpro_cron_expire_memberships", "pmpro_cron_expire_memberships" );
+	}
+
+	if( !empty( $pmprodev_options['expiration_warnings'] ) )	{
 		remove_action( "pmpro_cron_expiration_warnings", "pmpro_cron_expiration_warnings" );
 	}
+
 	if( !empty( $pmprodev_options['credit_card_expiring'] ) ) {
 		remove_action( "pmpro_cron_credit_card_expiring_warnings", "pmpro_cron_credit_card_expiring_warnings" );
-	}	
+	}
 }
 add_action('init', 'pmprodev_gateway_debug_setup');
 
