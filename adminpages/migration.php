@@ -84,10 +84,11 @@
 	jQuery( document ).ready( function( $ ) {
 		// Handle "Select All" button clicks.
 		$( '#pmprodev-export-select-all' ).on('click', function() {
+			$buttonText = $( this ).text();
 			const $checkboxes = $( 'input[name="pmprodev_export_options[]"]' );
 			//toggle checkboxes. If checked, uncheck. If unchecked, check.
 			$checkboxes.prop( 'checked', function( i, value ) {
-				return !value;
+				return $buttonText === '<?php esc_html_e( 'Select All', 'pmpro-toolkit' ); ?>' ? true : false;
 			});
 			//change button text based on current state. Should be internationalized.
 			const selectAllText = '<?php esc_html_e( 'Select All', 'pmpro-toolkit' ); ?>';
