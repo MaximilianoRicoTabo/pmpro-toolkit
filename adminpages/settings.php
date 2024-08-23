@@ -65,37 +65,12 @@
 
 	}
 
-	// Load the admin header.
-	require_once PMPRO_DIR . '/adminpages/admin_header.php';
-	$section = !empty( $_REQUEST['section']  ) ? sanitize_text_field( $_REQUEST[ 'section' ] ) : 'options';
-
 ?>
 <div class="wrap pmpro_admin">
-
 	<form action="" method="POST" enctype="multipart/form-data">
 		<?php wp_nonce_field( 'savesettings', 'pmpro_toolkit_nonce' );?>
-		<hr class="wp-header-end">
-		<h1><?php esc_html_e( 'Developer\'s Toolkit', 'pmpro-toolkit' ); ?></h1>
 
-	<!-- nav tabs -->
-
-	<h2 class="nav-tab-wrapper">
-		<a href="?page=pmpro-toolkit" class="nav-tab
-		<?php if( $section == 'options' ) { echo ' nav-tab-active'; } ?>">
-			<?php esc_html_e( 'Toolkit Options', 'pmpro-toolkit' ); ?>
-		</a>
-		<a href="?page=pmpro-toolkit&section=scripts" class="nav-tab
-		<?php if( $section == 'scripts' ) { echo ' nav-tab-active'; } ?>">
-			<?php esc_html_e( 'Database Scripts', 'pmpro-toolkit' ); ?>
-		</a>
-		<a href="?page=pmpro-toolkit&section=migration" class="nav-tab
-		<?php if( $section == 'migration' ) { echo ' nav-tab-active'; } ?>">
-			<?php esc_html_e( 'Migration Assistant', 'pmpro-toolkit' ); ?>
-		</a>
-	</h2>
-
-	<!--Email debugging section -->
-	<div class="section-options-wrapper"  <?php if( $section != 'options' ) { ?> style="display:none"><?php } ?>>
+		<!--Email debugging section -->
 		<div class="pmpro_section" data-visibility="shown" data-activated="true">
 			<div class="pmpro_section_toggle">
 				<button class="pmpro_section-toggle-button" type="button" aria-expanded="true">
@@ -266,18 +241,12 @@
 			</table>
 		</div>
 	</div>
-		<p class="submit topborder">
+		<p class="submit">
 			<input name="savesettings" type="submit" class="button-primary" value="<?php esc_html_e( 'Save Settings', 'pmpro-toolkit' ); ?>">
 		</p>
 	</form>
 	</div>
-</div>
-<div class="section-database-wrapper" <?php if( $section != 'scripts' ){ ?> style="display:none"><?php } ?>>
-	<?php require_once 'scripts.php'; ?>
-</div> 
-<div class="section-migration-wrapper" <?php if( $section != 'migration' ){ ?> style="display:none"><?php } ?>>
-	<?php require_once 'migration.php'; ?>
-<?php
+
 
 
 
