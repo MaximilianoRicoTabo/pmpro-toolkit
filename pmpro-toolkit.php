@@ -412,7 +412,7 @@ add_action( 'admin_init', 'pmprodev_process_migration_export' );
  * @since TBD	
  */
 function pmprodev_settings_page() {
-	require_once( plugin_dir_path( __FILE__ ) . '/adminpages/settings.php' );
+	require_once( plugin_dir_path( __FILE__ ) . '/adminpages/toolkit.php' );
 }
 
 /**

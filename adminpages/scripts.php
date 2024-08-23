@@ -74,17 +74,16 @@ $level_actions = array(
 
 ?>
 <div class="wrap pmpro_admin">
-	<div class="pmpro_section" data-visibility="shown" data-activated="true">
-		<div class="pmpro_section_toggle">
-			<button class="pmpro_section-toggle-button" type="button" aria-expanded="true">
-				<span class="dashicons dashicons-arrow-up-alt2"></span>
-				<?php esc_html_e( 'Clean Up Tools.', 'pmpro-toolkit' ); ?>
-			</button>
-		</div>
-		<div class="pmpro_section_inside">
-
-			<form id="form-scripts" method="post" action="">
-				<?php wp_nonce_field( 'pmpro_toolkit_script_action', 'pmpro_toolkit_scripts_nonce' ); ?>
+	<form id="form-scripts" method="post" action="">
+	<?php wp_nonce_field( 'pmpro_toolkit_script_action', 'pmpro_toolkit_scripts_nonce' ); ?>
+		<div class="pmpro_section" data-visibility="shown" data-activated="true">
+			<div class="pmpro_section_toggle">
+				<button class="pmpro_section-toggle-button" type="button" aria-expanded="true">
+					<span class="dashicons dashicons-arrow-up-alt2"></span>
+					<?php esc_html_e( 'Clean Up Tools.', 'pmpro-toolkit' ); ?>
+				</button>
+			</div>
+			<div class="pmpro_section_inside">
 				<p><?php esc_html_e( 'This feature allows you to either clear data from PMPro-related database tables and options
 				or to scrub member email and transaction id data to prevent real members from receiving updates or having their
 				subscriptions changed. Check the options that you would like to apply. The cleanup scripts will be run upon saving
@@ -97,79 +96,78 @@ $level_actions = array(
 					<span><?php esc_html_e( 'Checking these options WILL delete data from your database. Please backup first and make sure that you intend to delete this data.', 'pmpro-toolkit' ); ?></span>
 					</p>
 				</div>
-				
-			<table class="form-table">
-				<tbody>
-				<?php foreach ( $clean_up_actions as $action => $details ) : ?>
+
+				<table class="form-table">
+					<tbody>
+					<?php foreach ( $clean_up_actions as $action => $details ) : ?>
+						<tr>
+							<th scope="row"><?php echo esc_html( $details['label'] ); ?></th>
+							<td>
+								<label>
+									<input type="checkbox" name="<?php echo esc_attr( $action ); ?>" value="1">
+									<?php echo wp_kses_post( $details['description'] ); ?>
+								</label>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="pmpro_section" data-visibility="shown" data-activated="true">
+			<div class="pmpro_section_toggle">
+				<button class="pmpro_section-toggle-button" type="button" aria-expanded="true">
+					<span class="dashicons dashicons-arrow-up-alt2"></span>
+					<?php esc_html_e( 'Level Tools.', 'pmpro-toolkit' ); ?>
+
+				</button>
+			</div>
+			<div class="pmpro_section_inside">
+				<table class="form-table">
+					<tbody>
 					<tr>
-						<th scope="row"><?php echo esc_html( $details['label'] ); ?></th>
+						<th scope="row"><?php esc_html_e( 'Move users from one level to another.', 'pmpro-toolkit' ); ?></th>
 						<td>
-							<label>
-								<input type="checkbox" name="<?php echo esc_attr( $action ); ?>" value="1">
-								<?php echo wp_kses_post( $details['description'] ); ?>
-							</label>
+								<input type="checkbox" name="pmprodev_move_level" value="1">
+								<span><?php esc_html_e( 'From Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="move_level_a" value="">
+								<span><?php esc_html_e( 'To Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="move_level_b" value="">
+						</td>
+
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Give users a specific level.', 'pmpro-toolkit' ); ?></th>
+						<td>
+								<input type="checkbox" name="pmprodev_give_level" value="1">
+								<span><?php esc_html_e( 'Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="give_level_id" value="">
+								<span><?php esc_html_e( 'Start Date:', 'pmpro-toolkit' ); ?></span> <input type="text" name="give_level_startdate" value="">
+								<span><?php esc_html_e( 'End Date:', 'pmpro-toolkit' ); ?></span> <input type="text" name="give_level_enddate" value="">
 						</td>
 					</tr>
-				<?php endforeach; ?>
-				</tbody>
-			</table>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Cancel users with a specific level.', 'pmpro-toolkit' ); ?></th>
+						<td>
+								<input type="checkbox" name="pmprodev_cancel_level" value="1">
+								<span><?php esc_html_e( 'Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="cancel_level_id" value="">
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Copy "Require Membership" pages from one level to another.', 'pmpro-toolkit' ); ?></th>
+						<td>
+								<input type="checkbox" name="pmprodev_copy_memberships_pages" value="1">
+								<span><?php esc_html_e( 'Copy From Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="copy_memberships_pages_from" value="">
+								<span><?php esc_html_e( 'Copy To Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="copy_memberships_pages_to" value="">
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
-	</div>
-	<div class="pmpro_section" data-visibility="shown" data-activated="true">
-		<div class="pmpro_section_toggle">
-			<button class="pmpro_section-toggle-button" type="button" aria-expanded="true">
-				<span class="dashicons dashicons-arrow-up-alt2"></span>
-				<?php esc_html_e( 'Level Tools.', 'pmpro-toolkit' ); ?>
-
-			</button>
-		</div>
-		<div class="pmpro_section_inside">
-			<table class="form-table">
-				<tbody>
-				<tr>
-					<th scope="row"><?php esc_html_e( 'Move users from one level to another.', 'pmpro-toolkit' ); ?></th>
-					<td>
-							<input type="checkbox" name="pmprodev_move_level" value="1">
-							<span><?php esc_html_e( 'From Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="move_level_a" value="">
-							<span><?php esc_html_e( 'To Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="move_level_b" value="">
-					</td>
-
-				</tr>
-				<tr>
-					<th scope="row"><?php esc_html_e( 'Give users a specific level.', 'pmpro-toolkit' ); ?></th>
-					<td>
-							<input type="checkbox" name="pmprodev_give_level" value="1">
-							<span><?php esc_html_e( 'Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="give_level_id" value="">
-							<span><?php esc_html_e( 'Start Date:', 'pmpro-toolkit' ); ?></span> <input type="text" name="give_level_startdate" value="">
-							<span><?php esc_html_e( 'End Date:', 'pmpro-toolkit' ); ?></span> <input type="text" name="give_level_enddate" value="">
-					</td>
-				</tr>
-				<tr>
-					<th scope="row"><?php esc_html_e( 'Cancel users with a specific level.', 'pmpro-toolkit' ); ?></th>
-					<td>
-							<input type="checkbox" name="pmprodev_cancel_level" value="1">
-							<span><?php esc_html_e( 'Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="cancel_level_id" value="">
-					</td>
-				</tr>
-				<tr>
-					<th scope="row"><?php esc_html_e( 'Copy "Require Membership" pages from one level to another.', 'pmpro-toolkit' ); ?></th>
-					<td>
-							<input type="checkbox" name="pmprodev_copy_memberships_pages" value="1">
-							<span><?php esc_html_e( 'Copy From Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="copy_memberships_pages_from" value="">
-							<span><?php esc_html_e( 'Copy To Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="copy_memberships_pages_to" value="">
-					</td>
-				</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
-				<p class="submit">
-					<input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Run Selected Tools', 'pmpro-toolkit' ); ?>" />
-				</p>
-			</form>
-		</div>
-	</div>
+		<p class="submit">
+			<input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Run Selected Tools', 'pmpro-toolkit' ); ?>" />
+		</p>
+	</form>
 </div>
+
 <?php
 
 
