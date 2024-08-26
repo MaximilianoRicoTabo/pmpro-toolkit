@@ -20,6 +20,7 @@
 		$pmprodev_options['ipn_debug'] = sanitize_text_field( $_POST['pmprodev_options']['ipn_debug'] );
 		$pmprodev_options['checkout_debug_when'] = sanitize_text_field( $_POST['pmprodev_options']['checkout_debug_when'] );
 		$pmprodev_options['checkout_debug_email'] = sanitize_text_field( $_POST['pmprodev_options']['checkout_debug_email'] );
+		//save generate info setting
 
 		if( isset( $_POST['pmprodev_options']['expire_memberships'] ) ) {
 			$expire_memberships = intval( $_POST['pmprodev_options']['expire_memberships'] );
@@ -44,6 +45,14 @@
 		}
 
 		$pmprodev_options['credit_card_expiring'] = $credit_card_expiring;
+
+		if( isset( $_POST['pmprodev_options']['generate_info'] ) ) {
+			$generate_info = intval( $_POST['pmprodev_options']['generate_info'] );
+		} else {
+			$generate_info = 0;
+		}
+
+		$pmprodev_options['generate_info'] = $generate_info;
 
 		update_option( "pmprodev_options", $pmprodev_options );
 
@@ -139,14 +148,30 @@
 		</div>
 	</div>
 
-	<!--Gateway/Checkout Debugging section -->
-	<div class="pmpro_section" data-visibility="shown" data-activated="true">
-		<div class="pmpro_section_toggle">
-			<button class="pmpro_section-toggle-button" type="button" aria-expanded="true">
-				<span class="dashicons dashicons-arrow-up-alt2"></span>
-				<?php esc_html_e( 'Gateway/Checkout Debugging', 'pmpro-toolkit' ); ?>
-			</button>
+		<div class="pmpro_section" data-visibility="shown" data-activated="true">
+			<div class="pmpro_section_toggle">
+				<button class="pmpro_section-toggle-button" type="button" aria-expanded="true">
+					<span class="dashicons dashicons-arrow-up-alt2"></span>
+					<?php esc_html_e( 'Checkout Settings', 'pmpro-toolkit' ); ?>
+				</button>
+			</div>
+			<div class="pmpro_section_inside">
+				<table class="form-table">
+					<tbody>
+						<tr>
+							<th scope="row" valign="top">
+								<label for="pmprodev_options[generate_info]"> <?php esc_html_e( 'Enable Generate Checkout Info Button', 'pmpro-toolkit' ); ?></label>
+							</th>
+							<td>
+								<input type="checkbox" id="pmprodev_options[generate_info]" name="pmprodev_options[generate_info]" value="1" <?php checked( $pmprodev_options['generate_info'], 1, true ); ?>>
+								<label for="pmprodev_options[generate_info]" class="description"><?php echo esc_html_e( 'Ability to generate checkout info when testing.', 'pmpro-toolkit' ); ?></label>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
+
 		<div class="pmpro_section_inside">
 			<table class="form-table">
 			<tbody>
