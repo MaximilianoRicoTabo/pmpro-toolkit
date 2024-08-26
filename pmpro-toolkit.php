@@ -24,7 +24,8 @@ $default_options = array(
 	'redirect_email' => '',
 	'checkout_debug_email' => '',
 	'checkout_debug_when' => '',
-	'view_as_enabled' => false
+	'view_as_enabled' => false,
+	'generate_info' => false,
 );
 
 $pmprodev_options = get_option( 'pmprodev_options' );
@@ -439,7 +440,7 @@ function pmpro_toolkit_load_textdomain() {
 add_action( 'init', 'pmpro_toolkit_load_textdomain', 1 );
 
 /**
- *  Add links to the plugin row meta.
+ * Add links to the plugin row meta.
  *
  * @param array $links the links array
  * @param string $file the file name
@@ -455,3 +456,50 @@ function pmprodev_plugin_row_meta( $links, $file ) {
 	return $links;
 }
 add_filter( 'plugin_row_meta', 'pmprodev_plugin_row_meta', 10, 2 );
+
+/**
+ * Enqueue scripts on the frontend.
+ *
+ * @return void
+ * @since TBD
+ */
+function pmprodev_enqueue_scripts() {
+	wp_register_script( 'generate-checkout-info', plugins_url( 'js/pmprodev-generate-checkout-info.js', __FILE__ ), array( 'jquery' ) );
+	wp_enqueue_script( 'generate-checkout-info' );
+	//add css for the button
+	wp_register_style( 'pmprodev', plugins_url( 'css/pmprodev.css', __FILE__ ) );
+	wp_enqueue_style( 'pmprodev' );
+}
+
+add_action( 'wp_enqueue_scripts', 'pmprodev_enqueue_scripts' );
+
+/**
+ * Add a button to the checkout page to fill in the user data form.
+ *
+ * @return void
+ * @since TBD
+ */
+function pmprodev_create_button() {
+	global $pmpro_level;
+	$level = array( $pmpro_level );
+	//bail if it's a free level
+	if( pmpro_areLevelsFree( $level ) ) {
+		return;
+	}
+
+?>
+	<div class="pmpro_card">
+		<h2 class="pmpro_card_title pmpro_font-large"><?php esc_html_e( 'Base Email for Generating New User', 'pmpro-toolkit' ); ?></h2>
+		<div class="pmpro_card_content">
+			<input type="text" id="pmprodev-base-email" value="<?php esc_attr( get_option('admin_email') ) ?>">
+			<button id='pmprodev-generate' type="button" disabled><? esc_html_e( 'Generate New User', 'pmpro-toolkit' ); ?></button>
+		</div>
+	</div>
+
+<?php
+}
+
+// check if the generate_info option is set
+if( !empty( $pmprodev_options['generate_info'] && $pmprodev_options['generate_info'] ) ) {
+	add_action( 'pmpro_checkout_after_pricing_fields', 'pmprodev_create_button' );
+}
