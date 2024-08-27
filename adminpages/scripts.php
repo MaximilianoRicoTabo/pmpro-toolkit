@@ -46,7 +46,12 @@ $clean_up_actions = array(
 		'label' => __( 'Clear report', 'pmpro-toolkit' ),
 		'description' => __( 'Clear visits, views, and logins report.', 'pmpro-toolkit' ),
 		'message' => __( 'Visits, Views, and Logins report cleared.', 'pmpro-toolkit' )
-	)
+	),
+	'pmprodev_delete_test_orders' => array(
+		'label' => __( 'Delete test orders', 'pmpro-toolkit' ),
+		'description' => __( 'Delete all orders with a sanbox gateway environment', 'pmpro-toolkit' ),
+		'message' => __( 'Test orders deleted.', 'pmpro-toolkit' )
+	),
 );
 
 $level_actions = array(
@@ -272,6 +277,18 @@ function pmprodev_clear_vvl_report( $message ) {
 	pmprodev_output_message( $message );
 }
 
+/**
+ * Delete all orders with a sandbox gateway environment
+ *
+ * @param string $message The message to display after the orders are deleted.
+ * @return void
+ * @since TBD
+ */
+function pmprodev_delete_test_orders( $message ) {
+	global $wpdb;
+	$wpdb->query( "DELETE FROM {$wpdb->pmpro_membership_orders} WHERE gateway_environment = 'sandbox'" );
+	pmprodev_output_message( $message );
+}
 
 // Move level function
 function pmprodev_move_level( $message ) {
