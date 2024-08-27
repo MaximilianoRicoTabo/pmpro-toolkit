@@ -314,6 +314,7 @@ function pmprodev_delete_test_orders( $message ) {
 function pmprodev_clear_cached_report_data( $message ) {
 	pmpro_report_memberships_delete_transients();
 	pmpro_report_sales_delete_transients();
+	pmprodev_clean_member_tables();
 
 	pmprodev_output_message( $message );
 }
