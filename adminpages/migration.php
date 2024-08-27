@@ -65,6 +65,7 @@
 				'email_templates' => __( 'Email Templates', 'pmpro-toolkit' ),
 				'payment'         => __( 'Payment & SSL Settings', 'pmpro-toolkit' ),
 				'advanced'        => __( 'Advanced Settings', 'pmpro-toolkit' ),
+				'user_fields'     => __( 'User Fields', 'pmpro-toolkit' ),
 			];
 
 			foreach ( $export_options as $key => $label ) {

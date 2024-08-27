@@ -89,6 +89,30 @@ class PMProDev_Migration_Assistant {
 	}
 
 	/**
+	 * Export User Field Settings.
+	 *
+	 * @return array
+	 */
+	private static function build_export_data_user_fields() {
+		$option_name = array( 
+			'pmpro_user_fields_settings'
+		);	
+
+		// Get the payment settings from the options table.
+		return self::helper_get_export_data( $option_name );
+	}
+
+	/**
+	 * Import User Field Settings.
+	 *
+	 * @param [type] $user_fields_data
+	 * @return string The error message on importing.
+	 */
+	private static function import_data_user_fields( $user_fields_data ) {
+		self::helper_import_to_options( $user_fields_data );
+	}
+
+	/**
 	 * Get levels export data.
 	 *
 	 * @since 0.7
@@ -340,7 +364,18 @@ class PMProDev_Migration_Assistant {
 				continue;
 			}
 
-			update_option( $option_name, wp_kses_post( $option_value ) );
+			if ( ! is_array( $option_value ) ) {
+				$option_value = wp_kses_post( $option_value ); // Sanitize using wp_kses_post in case there is some JS or something along those lines in the options.
+			} else {
+				$option_value = array_map( 'sanitize_text_field', $option_value ); // Default to sanitize_text_field for arrays.
+			}
+
+			// If the option name is 'pmpro_user_fields_settings', we need to unserialize the value before storing it. Sanitized earlier above this.
+			if ( $option_name === 'pmpro_user_fields_settings' ) {
+				$option_value = maybe_unserialize( $option_value );
+			}
+	
+			update_option( $option_name, $option_value );
 		}
 	}
 
@@ -413,7 +448,8 @@ class PMProDev_Migration_Assistant {
 			'tax_rate',
 			'accepted_credit_cards',
 			'gateway',
-			'gateway_environment'
+			'gateway_environment',
+			'user_fields_settings'
 		);
 
 		$pmpro_options = apply_filters( 'pmpro_toolkit_allowed_import_options', $pmpro_options );
