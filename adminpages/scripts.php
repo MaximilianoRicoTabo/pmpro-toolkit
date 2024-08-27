@@ -6,6 +6,8 @@ $pmprodev_member_tables = array(
 	$wpdb->pmpro_memberships_users,
 	$wpdb->pmpro_membership_orders,
 	$wpdb->pmpro_discount_codes_uses,
+	$wpdb->pmpro_subscriptions,
+	$wpdb->pmpro_subscriptionmeta,
 );
 
 $pmprodev_other_tables = array(
@@ -215,6 +217,7 @@ function pmprodev_scrub_member_data( $message ) {
 		$new_transaction_id = 'SCRUBBED-' . $count;
 		$wpdb->query( "UPDATE {$wpdb->pmpro_membership_orders} SET payment_transaction_id = '" . esc_sql( $new_transaction_id ) . "' WHERE user_id = '" . intval( $user_id ) . "' AND payment_transaction_id <> ''" );
 		$wpdb->query( "UPDATE {$wpdb->pmpro_membership_orders} SET subscription_transaction_id = '" . esc_sql( $new_transaction_id ) . "' WHERE user_id = '" . intval( $user_id ) . "' AND subscription_transaction_id <> ''" );
+		$wpdb->query( "UPDATE {$wpdb->pmpro_subscriptions} SET subscription_transaction_id = '" . esc_sql( $new_transaction_id ) . "' WHERE user_id = '" . intval( $user_id ) . "' AND subscription_transaction_id <> ''" );
 		update_user_meta( $user_id, 'pmpro_braintree_customerid', $new_transaction_id );
 		update_user_meta( $user_id, 'pmpro_stripe_customerid', $new_transaction_id );
 		echo '. ';
