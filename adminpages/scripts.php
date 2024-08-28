@@ -388,12 +388,12 @@ function pmprodev_delete_incomplete_orders( $message ) {
 	global $wpdb;
 
 	if ( empty( $_REQUEST['delete_incomplete_orders_days'] ) ) {
-		pmprodev_output_message( __( 'Please enter a number of days.', 'pmpro-toolkit' ) );
+		pmprodev_output_message( __( 'Please enter a number of days.', 'pmpro-toolkit' ), 'warning' );
 		return;
 	}
 
 	if ( ! is_numeric( $_REQUEST['delete_incomplete_orders_days'] ) || intval( $_REQUEST['delete_incomplete_orders_days'] ) < 1 ) {
-		pmprodev_output_message( __( 'Please enter a valid number of days.', 'pmpro-toolkit' ) );
+		pmprodev_output_message( __( 'Please enter a valid number of days.', 'pmpro-toolkit' ), 'warning' );
 		return;
 	}
 
