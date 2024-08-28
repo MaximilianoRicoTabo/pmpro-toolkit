@@ -39,40 +39,40 @@
 		?>
 
 		<form method="post" enctype="multipart/form-data">
-				<label for="pmprodev-import-file"><?php esc_html_e( 'Choose a file to import', 'pmpro-toolkit' ); ?>:</label>
-				<input type="file" name="pmprodev-import-file" accept="application/json">
-				<?php wp_nonce_field( 'pmprodev-import' ); ?>
-				<p class="submit">
-					<input type="submit" class="button button-primary" value="<?php esc_html_e( 'Import PMPro Data', 'pmpro-toolkit' ); ?>" onclick="return confirm('<?php esc_html_e( 'This import will permanently overwrite site data. Are you sure that you would like to continue?', 'pmpro-toolkit' ); ?>')">
-				</p>
-			</form>
-		</div>
+			<label for="pmprodev-import-file"><?php esc_html_e( 'Choose a file to import', 'pmpro-toolkit' ); ?>:</label>
+			<input type="file" name="pmprodev-import-file" accept="application/json">
+			<?php wp_nonce_field( 'pmprodev-import' ); ?>
+			<p class="submit">
+				<input type="submit" class="button button-primary" value="<?php esc_html_e( 'Import PMPro Data', 'pmpro-toolkit' ); ?>" onclick="return confirm('<?php esc_html_e( 'This import will permanently overwrite site data. Are you sure that you would like to continue?', 'pmpro-toolkit' ); ?>')">
+			</p>
+		</form>
 	</div>
+</div>
 
-	<!-- Export Options Section -->
-	<div class="pmpro_section" data-visibility="shown" data-activated="true">
-		<div class="pmpro_section_toggle">
-			<button class="pmpro_section-toggle-button" type="button" aria-expanded="true">
-				<span class="dashicons dashicons-arrow-up-alt2"></span>
-				<?php esc_html_e( 'Export PMPro Data', 'pmpro-toolkit' ); ?>
-			</button>
-		</div>
-		<div class="pmpro_section_inside">
-			<p><?php esc_html_e( 'Select the data that you would like to export:', 'pmpro-toolkit' ); ?></p>
-			<button id="pmprodev-export-select-all"><?php esc_html_e( 'Select All', 'pmpro-toolkit' ); ?></button>
+<!-- Export Options Section -->
+<div class="pmpro_section" data-visibility="shown" data-activated="true">
+	<div class="pmpro_section_toggle">
+		<button class="pmpro_section-toggle-button" type="button" aria-expanded="true">
+			<span class="dashicons dashicons-arrow-up-alt2"></span>
+			<?php esc_html_e( 'Export PMPro Data', 'pmpro-toolkit' ); ?>
+		</button>
+	</div>
+	<div class="pmpro_section_inside">
+		<p><?php esc_html_e( 'Select the data that you would like to export:', 'pmpro-toolkit' ); ?></p>
+		<button class="button button-secondary" id="pmprodev-export-select-all"><?php esc_html_e( 'Select All', 'pmpro-toolkit' ); ?></button>
 
-			<?php
-			$export_options = [
-				'groups_and_levels' => __( 'Membership Group and Levels', 'pmpro-toolkit' ),
-				'email_templates' => __( 'Email Templates', 'pmpro-toolkit' ),
-				'payment'         => __( 'Payment & SSL Settings', 'pmpro-toolkit' ),
-				'advanced'        => __( 'Advanced Settings', 'pmpro-toolkit' ),
-				'user_fields'     => __( 'User Fields', 'pmpro-toolkit' ),
-			];
+		<?php
+		$export_options = [
+			'groups_and_levels' => __( 'Membership Group and Levels', 'pmpro-toolkit' ),
+			'email_templates' => __( 'Email Templates', 'pmpro-toolkit' ),
+			'payment'         => __( 'Payment & SSL Settings', 'pmpro-toolkit' ),
+			'advanced'        => __( 'Advanced Settings', 'pmpro-toolkit' ),
+			'user_fields'     => __( 'User Fields', 'pmpro-toolkit' ),
+		];
 
-			foreach ( $export_options as $key => $label ) {
-				echo '<p><input type="checkbox" name="pmprodev_export_options[]" value="' . esc_attr( $key ) . '" id="pmprodev_export_options_' . esc_attr( $key ) . '" /> <label for="pmprodev_export_options_' . esc_attr( $key ) . '">' . esc_html( $label ) . '</label></p>';
-			}
+		foreach ( $export_options as $key => $label ) {
+			echo '<p><input type="checkbox" name="pmprodev_export_options[]" value="' . esc_attr( $key ) . '" id="pmprodev_export_options_' . esc_attr( $key ) . '" /> <label for="pmprodev_export_options_' . esc_attr( $key ) . '">' . esc_html( $label ) . '</label></p>';
+		}
 		?>
 
 		<p class="submit">

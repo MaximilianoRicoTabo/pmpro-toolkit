@@ -3,22 +3,22 @@
 /**
  *  DTO class for Group and Levels
  */
-class GroupDTOClass {
+class PMProDev_GroupDTOClass {
 
 	/**
 	 * @var StdClass A group object
 	 * @since TBD
 	 */
-	private $group;
+	public $group;
 
 	/**
 	 * @var array A set of  Level objects
 	 * @since TBD
 	 */
-	private $levels;
+	public $levels;
 
 	/**
-	 * GroupDTOClass constructor.
+	 * PMProDev_GroupDTOClass constructor.
 	 *
 	 * @param StdClass $group A group object
 	 * @param array $levels A set of Level objects
