@@ -48,14 +48,6 @@
 
 		$pmprodev_options['credit_card_expiring'] = $credit_card_expiring;
 
-		if( isset( $_POST['pmprodev_options']['view_as_enabled'] ) ) {
-			$view_as_enabled = intval( $_POST['pmprodev_options']['view_as_enabled'] );
-		} else {
-			$view_as_enabled = 0;
-		}
-
-		$pmprodev_options['view_as_enabled'] = $view_as_enabled;
-
 		update_option( "pmprodev_options", $pmprodev_options );
 
 
@@ -194,54 +186,7 @@
 		</div>
 	</div>
 
-		<!-- View as section -->
-		<div class="pmpro_section" data-visibility="shown" data-activated="true">
-			<div class="pmpro_section_toggle">
-				<button class="pmpro_section-toggle-button" type="button" aria-expanded="true">
-					<span class="dashicons dashicons-arrow-up-alt2"></span>
-					<?php esc_html_e( '"View As..."', 'pmpro-toolkit' ); ?>
-				</button>
-			</div>
-			<div class="pmpro_section_inside">
-				<?php
-					global $wpdb;
-					// get example level info
-					$level = $wpdb->get_row( 'SELECT * FROM ' . $wpdb->pmpro_membership_levels . ' LIMIT 1' );
-					if( ! empty( $level ) ) {
-						$level_name = $level->name;
-						$level_id = $level->id;
-						$example_link = '<a href="' . add_query_arg( 'pmprodev_view_as', $level_id, home_url() ) . '">' . add_query_arg( 'pmprodev_view_as', $level_id, home_url() ) . '</a>';
-				?>
-				<p>
-					<?php esc_html_e( 'Enabling "View as..." will allow admins to view any page as if they had any membership level(s) for a brief period of time.', 'pmpro-toolkit' ); ?>
-				</p>
-				<p>
-					<?php echo sprintf( esc_html__( 'To use it, add the query string parameter %s to your URL, passing a series of level IDs separated by hyphens.', 'pmpro-toolkit' ), '<code>pmprodev_view_as</code>' ); ?>
-				</p>
-				<p>
-					<?php echo sprintf( __( 'For example, view your homepage as %s with the link %s', 'pmpro-toolkit' ), $level_name, $example_link ); ?>
-				</p>
-				<p>
-					<?php esc_html_e( 'Use "r" to reset the "View as" filter, and any nonexistent level ID (for example, "n" will never be a level ID) to emulate having no membership level.', 'pmpro-toolkit' );  } ?>
-				</p>
-
-				<table class="form-table">
-				<tbody>
-					<!--  Expire Memberships row  -->
-					<tr>
-						<th scope="row" valign="top">
-							<label for="view_as_enabled"><?php esc_html_e( 'Enable "View As..."', 'pmpro-toolkit' ); ?></label>
-						</th>
-						<td>
-							<input id="view_as_enabled" type="checkbox"  name="pmprodev_options[view_as_enabled]" value="1" <?php checked( $pmprodev_options['view_as_enabled'], 1, true ); ?>>
-							<label for="view_as_enabled"><?php _e( 'Check to enable the View As feature.', 'pmpro-toolkit' ); ?></label>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
-		<p class="submit">
+		<p class="submit topborder">
 			<input name="savesettings" type="submit" class="button-primary" value="<?php esc_html_e( 'Save Settings', 'pmpro-toolkit' ); ?>">
 		</p>
 	</form>
