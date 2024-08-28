@@ -69,6 +69,11 @@ $level_actions = array(
 		'label' => __( 'Copy memberships pages', 'pmpro-toolkit' ),
 		'description' => __( 'Make all pages that require a specific level ID also require another level ID.', 'pmpro-toolkit' ),
 		'message' => __( 'Require Membership options copied.', 'pmpro-toolkit' )
+	),
+	'pmprodev_delete_incomplete_orders' => array(
+		'label' => __( 'Delete incomplete orders', 'pmpro-toolkit' ),
+		'description' => __( 'Delete all orders in token, pending, or review status and that are older than a specified number of days.', 'pmpro-toolkit' ),
+		'message' => __( 'Incomplete orders deleted.', 'pmpro-toolkit' )
 	)
 );
 
@@ -156,6 +161,13 @@ $level_actions = array(
 								<input type="checkbox" name="pmprodev_copy_memberships_pages" value="1">
 								<span><?php esc_html_e( 'Copy From Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="copy_memberships_pages_from" value="">
 								<span><?php esc_html_e( 'Copy To Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="copy_memberships_pages_to" value="">
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Delete all orders in token, pending, or review status and that are older than a specified number of days.', 'pmpro-toolkit' ); ?></th>
+						<td>
+								<input type="checkbox" name="pmprodev_delete_incomplete_orders" value="1">
+								<span><?php esc_html_e( 'Days:', 'pmpro-toolkit' ); ?></span> <input type="text" name="delete_incomplete_orders_days" value="">
 						</td>
 					</tr>
 					</tbody>
@@ -356,8 +368,8 @@ function pmprodev_cancel_level( $message ) {
 function pmprodev_copy_memberships_pages( $message ) {
 	global $wpdb;
 
-	$from_level_id = intval( $_REQUEST['copy_memberships_pages_a'] );
-	$to_level_id = intval( $_REQUEST['copy_memberships_pages_b'] );
+	$from_level_id = intval( $_REQUEST['copy_memberships_pages_from'] );
+	$to_level_id = intval( $_REQUEST['copy_memberships_pages_to'] );
 
 	$wpdb->query(
 		$wpdb->prepare(
@@ -369,6 +381,31 @@ function pmprodev_copy_memberships_pages( $message ) {
 	);
 
 	pmprodev_output_message( $message );
+}
+
+// Delete incomplete orders function
+function pmprodev_delete_incomplete_orders( $message ) {
+	global $wpdb;
+
+	if ( empty( $_REQUEST['delete_incomplete_orders_days'] ) ) {
+		pmprodev_output_message( __( 'Please enter a number of days.', 'pmpro-toolkit' ), 'warning' );
+		return;
+	}
+
+	if ( ! is_numeric( $_REQUEST['delete_incomplete_orders_days'] ) || intval( $_REQUEST['delete_incomplete_orders_days'] ) < 1 ) {
+		pmprodev_output_message( __( 'Please enter a valid number of days.', 'pmpro-toolkit' ), 'warning' );
+		return;
+	}
+
+	$days = intval( $_REQUEST['delete_incomplete_orders_days'] );
+	$deleted = $wpdb->query(
+		$wpdb->prepare(
+			"DELETE FROM {$wpdb->pmpro_membership_orders} WHERE status IN('token', 'pending', 'review') AND timestamp < %s",
+			date( 'Y-m-d', strtotime( "-$days days" ) )
+		)
+	);
+
+	pmprodev_output_message( sprintf( __( '%d orders deleted.', 'pmpro-toolkit' ), (int) $deleted ) );
 }
 
 function pmprodev_output_message( $message, $type = 'success' ) {
