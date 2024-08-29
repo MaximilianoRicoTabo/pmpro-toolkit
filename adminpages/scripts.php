@@ -305,6 +305,7 @@ function pmprodev_clear_vvl_report( $message ) {
 function pmprodev_delete_test_orders( $message ) {
 	global $wpdb;
 	$wpdb->query( "DELETE FROM {$wpdb->pmpro_membership_orders} WHERE gateway_environment = 'sandbox'" );
+	pmprodev_output_message( $message );
 }
 /** Clear cached report data
  *
