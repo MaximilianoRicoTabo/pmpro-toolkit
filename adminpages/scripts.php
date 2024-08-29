@@ -6,6 +6,8 @@ $pmprodev_member_tables = array(
 	$wpdb->pmpro_memberships_users,
 	$wpdb->pmpro_membership_orders,
 	$wpdb->pmpro_discount_codes_uses,
+	$wpdb->pmpro_subscriptions,
+	$wpdb->pmpro_subscriptionmeta,
 );
 
 $pmprodev_other_tables = array(
@@ -51,6 +53,11 @@ $clean_up_actions = array(
 		'label' => __( 'Delete Test Orders', 'pmpro-toolkit' ),
 		'description' => __( 'Delete all orders made through the testing or sandbox gateway environment', 'pmpro-toolkit' ),
 		'message' => __( 'Test orders deleted.', 'pmpro-toolkit' )
+	),
+	'pmprodev_clear_cached_report_data' => array(
+		'label' => __( 'Clear cached report data', 'pmpro-toolkit' ),
+		'description' => __( 'Clear cached report data.', 'pmpro-toolkit' ),
+		'message' => __( 'Cached report data cleared.', 'pmpro-toolkit' )
 	),
 );
 
@@ -324,6 +331,7 @@ function pmprodev_clean_member_tables( $message ) {
 	foreach ( $pmprodev_member_tables as $table ) {
 		$wpdb->query( "TRUNCATE $table" );
 	}
+	pmprodev_clear_cached_report_data( '' );
 	pmprodev_output_message( $message );
 }
 
@@ -350,6 +358,7 @@ function pmprodev_scrub_member_data( $message ) {
 		$new_transaction_id = 'SCRUBBED-' . $count;
 		$wpdb->query( "UPDATE {$wpdb->pmpro_membership_orders} SET payment_transaction_id = '" . esc_sql( $new_transaction_id ) . "' WHERE user_id = '" . intval( $user_id ) . "' AND payment_transaction_id <> ''" );
 		$wpdb->query( "UPDATE {$wpdb->pmpro_membership_orders} SET subscription_transaction_id = '" . esc_sql( $new_transaction_id ) . "' WHERE user_id = '" . intval( $user_id ) . "' AND subscription_transaction_id <> ''" );
+		$wpdb->query( "UPDATE {$wpdb->pmpro_subscriptions} SET subscription_transaction_id = '" . esc_sql( $new_transaction_id ) . "' WHERE user_id = '" . intval( $user_id ) . "' AND subscription_transaction_id <> ''" );
 		update_user_meta( $user_id, 'pmpro_braintree_customerid', $new_transaction_id );
 		update_user_meta( $user_id, 'pmpro_stripe_customerid', $new_transaction_id );
 		echo '. ';
@@ -417,6 +426,18 @@ function pmprodev_clear_vvl_report( $message ) {
 function pmprodev_delete_test_orders( $message ) {
 	global $wpdb;
 	$wpdb->query( "DELETE FROM {$wpdb->pmpro_membership_orders} WHERE gateway_environment = 'sandbox'" );
+	pmprodev_output_message( $message );
+}
+/** Clear cached report data
+ *
+ * @param string $message The message to display after the process is complete.
+ * @since TBD
+ * @return void
+ */
+function pmprodev_clear_cached_report_data( $message ) {
+	pmpro_report_memberships_delete_transients();
+	pmpro_report_sales_delete_transients();
+
 	pmprodev_output_message( $message );
 }
 
@@ -544,10 +565,13 @@ function pmprodev_delete_incomplete_orders( $message ) {
 }
 
 function pmprodev_output_message( $message, $type = 'success' ) {
-	echo '<div class="notice notice-' . esc_attr( $type ) . 'f"><p>' . esc_html( $message ) . '</p></div>';
+	if ( empty( $message ) ) {
+		return;
+	}
+	echo '<div class="notice notice-' . esc_attr( $type ) . '"><p>' . esc_html( $message ) . '</p></div>';
 }
 
 function pmprodev_process_complete() {
-	echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Process complete.', 'pmpro-toolkit' ) . '</p></div>';
+	echo '<div class="notice notice-success"><p>' . esc_html__( 'Process complete.', 'pmpro-toolkit' ) . '</p></div>';
 }
 ?>
