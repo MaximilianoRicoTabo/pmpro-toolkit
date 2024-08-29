@@ -54,6 +54,11 @@ $clean_up_actions = array(
 		'description' => __( 'Delete all orders with a sanbox gateway environment', 'pmpro-toolkit' ),
 		'message' => __( 'Test orders deleted.', 'pmpro-toolkit' )
 	),
+	'pmprodev_clear_cached_report_data' => array(
+		'label' => __( 'Clear cached report data', 'pmpro-toolkit' ),
+		'description' => __( 'Clear cached report data.', 'pmpro-toolkit' ),
+		'message' => __( 'Cached report data cleared.', 'pmpro-toolkit' )
+	),
 );
 
 $level_actions = array(
@@ -208,6 +213,7 @@ function pmprodev_clean_member_tables( $message ) {
 	foreach ( $pmprodev_member_tables as $table ) {
 		$wpdb->query( "TRUNCATE $table" );
 	}
+	pmprodev_clear_cached_report_data( '' );
 	pmprodev_output_message( $message );
 }
 
@@ -302,6 +308,18 @@ function pmprodev_clear_vvl_report( $message ) {
 function pmprodev_delete_test_orders( $message ) {
 	global $wpdb;
 	$wpdb->query( "DELETE FROM {$wpdb->pmpro_membership_orders} WHERE gateway_environment = 'sandbox'" );
+	pmprodev_output_message( $message );
+}
+/** Clear cached report data
+ *
+ * @param string $message The message to display after the process is complete.
+ * @since TBD
+ * @return void
+ */
+function pmprodev_clear_cached_report_data( $message ) {
+	pmpro_report_memberships_delete_transients();
+	pmpro_report_sales_delete_transients();
+
 	pmprodev_output_message( $message );
 }
 
@@ -429,6 +447,9 @@ function pmprodev_delete_incomplete_orders( $message ) {
 }
 
 function pmprodev_output_message( $message, $type = 'success' ) {
+	if ( empty( $message ) ) {
+		return;
+	}
 	echo '<div class="notice notice-' . esc_attr( $type ) . ' is-dismissible"><p>' . esc_html( $message ) . '</p></div>';
 }
 
