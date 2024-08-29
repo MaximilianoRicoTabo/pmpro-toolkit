@@ -211,6 +211,7 @@ function pmprodev_clean_member_tables( $message ) {
 	foreach ( $pmprodev_member_tables as $table ) {
 		$wpdb->query( "TRUNCATE $table" );
 	}
+	pmprodev_clear_cached_report_data( '' );
 	pmprodev_output_message( $message );
 }
 
@@ -312,7 +313,6 @@ function pmprodev_delete_test_orders( $message ) {
  * @return void
  */
 function pmprodev_clear_cached_report_data( $message ) {
-	pmprodev_clean_member_tables();
 	pmpro_report_memberships_delete_transients();
 	pmpro_report_sales_delete_transients();
 
@@ -443,6 +443,9 @@ function pmprodev_delete_incomplete_orders( $message ) {
 }
 
 function pmprodev_output_message( $message, $type = 'success' ) {
+	if ( empty( $message ) ) {
+		return;
+	}
 	echo '<div class="notice notice-' . esc_attr( $type ) . ' is-dismissible"><p>' . esc_html( $message ) . '</p></div>';
 }
 
