@@ -18,177 +18,295 @@ $pmprodev_other_tables = array(
 
 $clean_up_actions = array(
 	'pmprodev_clean_member_tables'	=> array(
-		'label' => __( 'Clean member tables', 'pmpro-toolkit' ),
-		'description' => __( 'Delete all member data. (wp_pmpro_memberships_users, wp_pmpro_membership_orders, wp_pmpro_discount_codes_uses)', 'pmpro-toolkit' ),
+		'label' => __( 'Delete Member Data', 'pmpro-toolkit' ),
+		'description' => __( 'Delete all member data. This script deletes data from the wp_pmpro_memberships_users, wp_pmpro_membership_orders, and wp_pmpro_discount_codes_uses tables.', 'pmpro-toolkit' ),
 		'message' => __( 'Member tables have been truncated.', 'pmpro-toolkit' ),
 	),
 	'pmprodev_clean_level_data'	=> array(
-		'label' => __( 'Clean level data', 'pmpro-toolkit' ),
-		'description' => __( 'Delete all level and discount code data. (wp_pmpro_discount_codes, wp_pmpro_discount_codes_levels, wp_pmpro_membership_levels, wp_pmpro_memberships_categories, wp_pmpro_memberships_pages)', 'pmpro-toolkit' ),
+		'label' => __( 'Reset Membership Settings', 'pmpro-toolkit' ),
+		'description' => __( 'Delete all membership level, content protection, and discount code settings. This script deletes data from the wp_pmpro_discount_codes, wp_pmpro_discount_codes_levels, wp_pmpro_membership_levels, wp_pmpro_memberships_categories, and wp_pmpro_memberships_pages tables.', 'pmpro-toolkit' ),
 		'message' => __( 'Level and discount code tables have been truncated.', 'pmpro-toolkit' )
 	),
 	'pmprodev_scrub_member_data'	=> array(
-		'label' => __( 'Scrub member data', 'pmpro-toolkit' ),
-		'description' => __( 'Scrub member emails and transaction ids. Updates non-admins in wp_users and wp_pmpro_membership_orders tables. This may time out on slow servers or sites with large numbers of users.', 'pmpro-toolkit' ),
+		'label' => __( 'Scrub Member Data', 'pmpro-toolkit' ),
+		'description' => __( 'Scrub all member emails and transaction IDs. This script updates all non-admins in the wp_users and wp_pmpro_membership_orders tables to anonymize their email addresses and order transaction IDs. This may time out on slow servers or sites with large numbers of users.', 'pmpro-toolkit' ),
 		'message' => __( 'Scrubbing user data...', 'pmpro-toolkit' )
 	),
 	'pmprodev_delete_users'	=> array(
-		'label' => __( 'Delete users', 'pmpro-toolkit' ),
-		'description' => __( 'Delete non-admin users. (Deletes from wp_users and wp_usermeta tables directly.) This may time out on slow servers or sites with large numbers of users.', 'pmpro-toolkit' ),
+		'label' => __( 'Delete Users', 'pmpro-toolkit' ),
+		'description' => __( 'Delete non-admin users. This script deletes from wp_users and wp_usermeta tables directly. This may time out on slow servers or sites with large numbers of users.', 'pmpro-toolkit' ),
 		'message' => __( 'Deleting non-admins...', 'pmpro-toolkit' )
 	),
 	'pmprodev_clean_pmpro_options'	=> array(
-		'label' => __( 'Clean options', 'pmpro-toolkit' ),
-		'description' => __( 'Delete all PMPro options. (Any option prefixed with pmpro_ but not the DB version or PMPro page_id options.)', 'pmpro-toolkit' ),
+		'label' => __( 'Reset Options', 'pmpro-toolkit' ),
+		'description' => __( 'Delete all PMPro options. This script deletes any option prefixed with pmpro_ in the wp_options table, excluding the pmpro_db_version and assigned PMPro pages.)', 'pmpro-toolkit' ),
 		'message' => __( 'Options deleted.', 'pmpro-toolkit' )
 	),
 	'pmprodev_clear_vvl_report'	=> array(
-		'label' => __( 'Clear report', 'pmpro-toolkit' ),
-		'description' => __( 'Clear visits, views, and logins report.', 'pmpro-toolkit' ),
+		'label' => __( 'Clear Logins Report', 'pmpro-toolkit' ),
+		'description' => __( 'Clear and reset all visits, views, and logins report data.', 'pmpro-toolkit' ),
 		'message' => __( 'Visits, Views, and Logins report cleared.', 'pmpro-toolkit' )
 	),
 	'pmprodev_delete_test_orders' => array(
-		'label' => __( 'Delete test orders', 'pmpro-toolkit' ),
-		'description' => __( 'Delete all orders with a sanbox gateway environment', 'pmpro-toolkit' ),
+		'label' => __( 'Delete Test Orders', 'pmpro-toolkit' ),
+		'description' => __( 'Delete all orders made through the testing or sandbox gateway environment', 'pmpro-toolkit' ),
 		'message' => __( 'Test orders deleted.', 'pmpro-toolkit' )
 	),
 );
 
 $level_actions = array(
 	'pmprodev_move_level' => array(
-	'label' => __( 'Move level', 'pmpro-toolkit' ),
-	'description' => __( 'Change all members with a specific level ID to another level ID. Will NOT cancel any recurring subscriptions.', 'pmpro-toolkit' ),
+	'label' => __( 'Change Membership Level', 'pmpro-toolkit' ),
+	'description' => __( 'Change all members with a specific level ID to another level ID. Note: running this script will NOT cancel any recurring subscriptions.', 'pmpro-toolkit' ),
 	'message' => __( 'Users updated. Running pmpro_after_change_membership_level filter for all users...', 'pmpro-toolkit' )
 	),
 	'pmprodev_give_level' => array(
-		'label' => __( 'Give level', 'pmpro-toolkit' ),
-		'description' => __( 'Give all non-members a specific level ID. This only gives users the level via the database and does NOT fire any pmpro_change_membership_level hooks.', 'pmpro-toolkit' ),
+		'label' => __( 'Assign Membership Level', 'pmpro-toolkit' ),
+		'description' => __( 'Assign a specific membership level to all users without an active membership. Note: This script only assigns membership via the database and does NOT fire any pmpro_change_membership_level hooks or process payments.', 'pmpro-toolkit' ),
 		'message' => __( '%s users were given level %s', 'pmpro-toolkit' )
 	),
 	'pmprodev_cancel_level' => array(
-		'label' => __( 'Cancel level', 'pmpro-toolkit' ),
-		'description' => __( 'Cancel all members with a specific level ID. WILL also cancel any recurring subscriptions.', 'pmpro-toolkit' ),
+		'label' => __( 'Cancel Membership', 'pmpro-toolkit' ),
+		'description' => __( 'Cancel all members with a specific level ID. Note: This script WILL also cancel any recurring subscriptions.', 'pmpro-toolkit' ),
 		'message' => __( 'Cancelling users...', 'pmpro-toolkit' )
 	),
+);
+
+$other_actions = array(
 	'pmprodev_copy_memberships_pages' => array(
-		'label' => __( 'Copy memberships pages', 'pmpro-toolkit' ),
+		'label' => __( 'Copy Content Restrictions', 'pmpro-toolkit' ),
 		'description' => __( 'Make all pages that require a specific level ID also require another level ID.', 'pmpro-toolkit' ),
-		'message' => __( 'Require Membership options copied.', 'pmpro-toolkit' )
+		'message' => __( 'Content restrictions copied.', 'pmpro-toolkit' )
 	),
 	'pmprodev_delete_incomplete_orders' => array(
-		'label' => __( 'Delete incomplete orders', 'pmpro-toolkit' ),
-		'description' => __( 'Delete all orders in token, pending, or review status and that are older than a specified number of days.', 'pmpro-toolkit' ),
+		'label' => __( 'Delete Incomplete Orders', 'pmpro-toolkit' ),
+		'description' => __( 'Delete all orders in token, pending, or review status that are older than a specified number of days.', 'pmpro-toolkit' ),
 		'message' => __( 'Incomplete orders deleted.', 'pmpro-toolkit' )
 	)
 );
 
 ?>
-<div class="wrap pmpro_admin">
-	<form id="form-scripts" method="post" action="">
-	<?php wp_nonce_field( 'pmpro_toolkit_script_action', 'pmpro_toolkit_scripts_nonce' ); ?>
-		<div class="pmpro_section" data-visibility="shown" data-activated="true">
-			<div class="pmpro_section_toggle">
-				<button class="pmpro_section-toggle-button" type="button" aria-expanded="true">
-					<span class="dashicons dashicons-arrow-up-alt2"></span>
-					<?php esc_html_e( 'Clean Up Tools.', 'pmpro-toolkit' ); ?>
-				</button>
-			</div>
-			<div class="pmpro_section_inside">
-				<p><?php esc_html_e( 'This feature allows you to either clear data from PMPro-related database tables and options
-				or to scrub member email and transaction id data to prevent real members from receiving updates or having their
-				subscriptions changed. Check the options that you would like to apply. The cleanup scripts will be run upon saving
-				these settings.', 'pmpro-toolkit' ); ?>
-				</p>
-
-				<div class="error">
-					<p>
-					<span><?php esc_html_e( 'IMPORTANT NOTE:', 'pmpro-toolkit' ); ?></span>
-					<span><?php esc_html_e( 'Checking these options WILL delete data from your database. Please backup first and make sure that you intend to delete this data.', 'pmpro-toolkit' ); ?></span>
-					</p>
-				</div>
-
-				<table class="form-table">
-					<tbody>
-					<?php foreach ( $clean_up_actions as $action => $details ) : ?>
-						<tr>
-							<th scope="row"><?php echo esc_html( $details['label'] ); ?></th>
-							<td>
-								<label>
-									<input type="checkbox" name="<?php echo esc_attr( $action ); ?>" value="1">
-									<?php echo wp_kses_post( $details['description'] ); ?>
-								</label>
-							</td>
-						</tr>
-					<?php endforeach; ?>
-					</tbody>
-				</table>
-			</div>
+<h2><?php esc_html_e( 'Database Scripts', 'pmpro-toolkit' ); ?></h2>
+<p><?php esc_html_e( 'Toolkit scripts allow you to clean up, delete, duplicate, or anonymize data in your membership site. We recommend only running one script at a time. Check a setting below and click save to run the script.', 'pmpro-toolkit' ); ?></p>
+<p><?php esc_html_e( 'Note: Running the scripts below will delete or modify data in your database. These changes cannot be reversed. Please take a site backup before running a script.', 'pmpro-toolkit' ); ?></p>
+<form id="form-scripts" method="post" action="">
+<?php wp_nonce_field( 'pmpro_toolkit_script_action', 'pmpro_toolkit_scripts_nonce' ); ?>
+	<div class="pmpro_section" data-visibility="shown" data-activated="true">
+		<div class="pmpro_section_toggle">
+			<button class="pmpro_section-toggle-button" type="button" aria-expanded="true">
+				<span class="dashicons dashicons-arrow-up-alt2"></span>
+				<?php esc_html_e( 'Database Clean Up Scripts', 'pmpro-toolkit' ); ?>
+			</button>
 		</div>
-		<div class="pmpro_section" data-visibility="shown" data-activated="true">
-			<div class="pmpro_section_toggle">
-				<button class="pmpro_section-toggle-button" type="button" aria-expanded="true">
-					<span class="dashicons dashicons-arrow-up-alt2"></span>
-					<?php esc_html_e( 'Level Tools.', 'pmpro-toolkit' ); ?>
-
-				</button>
-			</div>
-			<div class="pmpro_section_inside">
-				<table class="form-table">
-					<tbody>
+		<div class="pmpro_section_inside">
+			<table class="form-table">
+				<tbody>
+				<?php foreach ( $clean_up_actions as $action => $details ) : ?>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Move users from one level to another.', 'pmpro-toolkit' ); ?></th>
+						<th scope="row"><?php echo esc_html( $details['label'] ); ?></th>
 						<td>
-								<input type="checkbox" name="pmprodev_move_level" value="1">
-								<span><?php esc_html_e( 'From Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="move_level_a" value="">
-								<span><?php esc_html_e( 'To Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="move_level_b" value="">
-						</td>
-
-					</tr>
-					<tr>
-						<th scope="row"><?php esc_html_e( 'Give users a specific level.', 'pmpro-toolkit' ); ?></th>
-						<td>
-								<input type="checkbox" name="pmprodev_give_level" value="1">
-								<span><?php esc_html_e( 'Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="give_level_id" value="">
-								<span><?php esc_html_e( 'Start Date:', 'pmpro-toolkit' ); ?></span> <input type="text" name="give_level_startdate" value="">
-								<span><?php esc_html_e( 'End Date:', 'pmpro-toolkit' ); ?></span> <input type="text" name="give_level_enddate" value="">
+							<input type="checkbox" id="<?php echo esc_attr( $action ); ?>" name="<?php echo esc_attr( $action ); ?>" value="1">
+							<label for="<?php echo esc_attr( $action ); ?>"><?php echo wp_kses_post( $details['description'] ); ?></label>
 						</td>
 					</tr>
-					<tr>
-						<th scope="row"><?php esc_html_e( 'Cancel users with a specific level.', 'pmpro-toolkit' ); ?></th>
-						<td>
-								<input type="checkbox" name="pmprodev_cancel_level" value="1">
-								<span><?php esc_html_e( 'Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="cancel_level_id" value="">
-						</td>
-					</tr>
-					<tr>
-						<th scope="row"><?php esc_html_e( 'Copy "Require Membership" pages from one level to another.', 'pmpro-toolkit' ); ?></th>
-						<td>
-								<input type="checkbox" name="pmprodev_copy_memberships_pages" value="1">
-								<span><?php esc_html_e( 'Copy From Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="copy_memberships_pages_from" value="">
-								<span><?php esc_html_e( 'Copy To Level ID:', 'pmpro-toolkit' ); ?></span> <input type="text" name="copy_memberships_pages_to" value="">
-						</td>
-					</tr>
-					<tr>
-						<th scope="row"><?php esc_html_e( 'Delete all orders in token, pending, or review status and that are older than a specified number of days.', 'pmpro-toolkit' ); ?></th>
-						<td>
-								<input type="checkbox" name="pmprodev_delete_incomplete_orders" value="1">
-								<span><?php esc_html_e( 'Days:', 'pmpro-toolkit' ); ?></span> <input type="text" name="delete_incomplete_orders_days" value="">
-						</td>
-					</tr>
-					</tbody>
-				</table>
-			</div>
+				<?php endforeach; ?>
+				</tbody>
+			</table>
 		</div>
-		<p class="submit">
-			<input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Run Selected Tools', 'pmpro-toolkit' ); ?>" />
-		</p>
-	</form>
-</div>
+	</div>
+	<div class="pmpro_section" data-visibility="shown" data-activated="true">
+		<div class="pmpro_section_toggle">
+			<button class="pmpro_section-toggle-button" type="button" aria-expanded="true">
+				<span class="dashicons dashicons-arrow-up-alt2"></span>
+				<?php esc_html_e( 'Member Scripts', 'pmpro-toolkit' ); ?>
+			</button>
+		</div>
+		<div class="pmpro_section_inside">
+			<table class="form-table">
+				<tbody>
+				<tr>
+					<th scope="row"><?php echo esc_html( $level_actions['pmprodev_move_level']['label'] ); ?></th>
+					<td>
+						<input type="checkbox" id="pmprodev_move_level" name="pmprodev_move_level" value="1">
+						<label for="pmprodev_move_level">
+							<?php
+								printf(
+									/* translators: %s: script name */
+									esc_html__( 'Run the %s script.', 'pmpro-toolkit' ),
+									esc_html( $level_actions['pmprodev_move_level']['label'] )
+								);
+							?>
+						</label>
+						<div id="pmprodev_move_level_actions" style="display: none;">
+							<p>
+								<?php esc_html_e( 'From Level ID:', 'pmpro-toolkit' ); ?>
+								<input type="number" name="move_level_a" value="" size="5" step="1">
+								<?php esc_html_e( 'To Level ID:', 'pmpro-toolkit' ); ?>
+								<input type="number" name="move_level_b" value="" size="5">
+							</p>
+							<p class="description"><?php echo esc_html( $level_actions['pmprodev_move_level']['description'] ); ?></p>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><?php echo esc_html( $level_actions['pmprodev_give_level']['label'] ); ?></th>
+					<td>
+						<input type="checkbox" id="pmprodev_give_level" name="pmprodev_give_level" value="1">
+						<label for="pmprodev_give_level">
+							<?php
+								printf(
+									/* translators: %s: script name */
+									esc_html__( 'Run the %s script.', 'pmpro-toolkit' ),
+									esc_html( $level_actions['pmprodev_give_level']['label'] )
+								);
+							?>
+						</label>
+						<div id="pmprodev_give_level_actions" style="display: none;">
+							<p>
+								<?php esc_html_e( 'Level ID:', 'pmpro-toolkit' ); ?>
+								<input type="number" name="give_level_id" value="" size="5">
+								<?php esc_html_e( 'Start Date:', 'pmpro-toolkit' ); ?>
+								<input type="date" name="give_level_startdate" value="">
+								<?php esc_html_e( 'End Date:', 'pmpro-toolkit' ); ?>
+								<input type="date" name="give_level_enddate" value="">
+							</p>
+							<p class="description"><?php echo esc_html( $level_actions['pmprodev_give_level']['description'] ); ?></p>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><?php echo esc_html( $level_actions['pmprodev_cancel_level']['label'] ); ?></th>
+					<td>
+						<input type="checkbox" id="pmprodev_cancel_level" name="pmprodev_cancel_level" value="1">
+						<label for="pmprodev_cancel_level">
+							<?php
+								printf(
+									/* translators: %s: script name */
+									esc_html__( 'Run the %s script.', 'pmpro-toolkit' ),
+									esc_html( $level_actions['pmprodev_cancel_level']['label'] )
+								);
+							?>
+						</label>
+						<div id="pmprodev_cancel_level_actions" style="display: none;">
+							<p>
+								<?php esc_html_e( 'Level ID:', 'pmpro-toolkit' ); ?>
+								<input type="number" name="cancel_level_id" value="" size="5">
+							</p>
+							<p class="description"><?php echo esc_html( $level_actions['pmprodev_cancel_level']['description'] ); ?></p>
+						</div>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="pmpro_section" data-visibility="shown" data-activated="true">
+		<div class="pmpro_section_toggle">
+			<button class="pmpro_section-toggle-button" type="button" aria-expanded="true">
+				<span class="dashicons dashicons-arrow-up-alt2"></span>
+				<?php esc_html_e( 'Other Scripts', 'pmpro-toolkit' ); ?>
+			</button>
+		</div>
+		<div class="pmpro_section_inside">
+			<table class="form-table">
+				<tr>
+					<th scope="row"><?php echo esc_html( $other_actions['pmprodev_copy_memberships_pages']['label'] ); ?></th>
+					<td>
+						<input type="checkbox" id="pmprodev_copy_memberships_pages" name="pmprodev_copy_memberships_pages" value="1">
+						<label for="pmprodev_copy_memberships_pages">
+							<?php
+								printf(
+									/* translators: %s: script name */
+									esc_html__( 'Run the %s script.', 'pmpro-toolkit' ),
+									esc_html( $other_actions['pmprodev_copy_memberships_pages']['label'] )
+								);
+							?>
+						</label>
+						<div id="pmprodev_copy_memberships_pages_actions" style="display: none;">
+							<p>
+								<?php esc_html_e( 'Copy From Level ID:', 'pmpro-toolkit' ); ?>
+								<input type="number" name="copy_memberships_pages_from" value="">
+								<?php esc_html_e( 'Copy To Level ID:', 'pmpro-toolkit' ); ?>
+								<input type="number" name="copy_memberships_pages_to" value="">
+							</p>
+							<p class="description"><?php echo esc_html( $other_actions['pmprodev_copy_memberships_pages']['description'] ); ?></p>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><?php echo esc_html( $other_actions['pmprodev_delete_incomplete_orders']['label'] ); ?></th>
+					<td>
+						<input type="checkbox" id="pmprodev_delete_incomplete_orders" name="pmprodev_delete_incomplete_orders" value="1">
+						<label for="pmprodev_delete_incomplete_orders">
+							<?php
+								printf(
+									/* translators: %s: script name */
+									esc_html__( 'Run the %s script.', 'pmpro-toolkit' ),
+									esc_html( $other_actions['pmprodev_delete_incomplete_orders']['label'] )
+								);
+							?>
+						</label>
+						<div id="pmprodev_delete_incomplete_orders_actions" style="display: none;">
+							<p>
+								<?php esc_html_e( 'Days:', 'pmpro-toolkit' ); ?>
+								<input type="number" name="delete_incomplete_orders_days" value="">
+							</p>
+							<p class="description"><?php echo esc_html( $other_actions['pmprodev_delete_incomplete_orders']['description'] ); ?></p>
+						</div>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<p class="submit">
+		<input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Run Selected Tools', 'pmpro-toolkit' ); ?>" />
+	</p>
+</form>
 
+<script>
+	jQuery(document).ready(function($) {
+		$('#pmprodev_move_level').change(function() {
+			if ($(this).is(':checked')) {
+				$('#pmprodev_move_level_actions').show();
+			} else {
+				$('#pmprodev_move_level_actions').hide();
+			}
+		});
+		$('#pmprodev_give_level').change(function() {
+			if ($(this).is(':checked')) {
+				$('#pmprodev_give_level_actions').show();
+			} else {
+				$('#pmprodev_give_level_actions').hide();
+			}
+		});
+		$('#pmprodev_cancel_level').change(function() {
+			if ($(this).is(':checked')) {
+				$('#pmprodev_cancel_level_actions').show();
+			} else {
+				$('#pmprodev_cancel_level_actions').hide();
+			}
+		});
+		$('#pmprodev_copy_memberships_pages').change(function() {
+			if ($(this).is(':checked')) {
+				$('#pmprodev_copy_memberships_pages_actions').show();
+			} else {
+				$('#pmprodev_copy_memberships_pages_actions').hide();
+			}
+		});
+		$('#pmprodev_delete_incomplete_orders').change(function() {
+			if ($(this).is(':checked')) {
+				$('#pmprodev_delete_incomplete_orders_actions').show();
+			} else {
+				$('#pmprodev_delete_incomplete_orders_actions').hide();
+			}
+		});
+	});
+</script>
 <?php
 
 
-$actions = array_merge( $clean_up_actions, $level_actions );
+$actions = array_merge( $clean_up_actions, $level_actions, $other_actions );
 foreach ( $actions as $action => $options ) {
 	if ( ! empty( $_POST[ $action ] ) ) {
 		//Check nonce
@@ -312,12 +430,12 @@ function pmprodev_move_level( $message ) {
 	$to_level_id = intval( $_REQUEST['move_level_b'] );
 
 	if ( $from_level_id < 1 || $to_level_id < 1 ) {
-		pmprodev_output_message( __( 'Please enter a level ID > 1 for each option.', 'pmpro-toolkit' ) );
+		pmprodev_output_message( __( 'Please enter a level ID > 1 for each option.', 'pmpro-toolkit' ), 'warning' );
 	} else {
 		$user_ids = $wpdb->get_col( "SELECT user_id FROM $wpdb->pmpro_memberships_users WHERE membership_id = $from_level_id AND status = 'active'" );
 
 		if ( empty( $user_ids ) ) {
-			pmprodev_output_message( sprintf( __( 'Couldn\'t find users with level ID %d.', 'pmpro-toolkit' ), $from_level_id ) );
+			pmprodev_output_message( sprintf( __( 'Couldn\'t find users with level ID %d.', 'pmpro-toolkit' ), $from_level_id ), 'warning' );
 		} else {
 			$wpdb->query( "UPDATE $wpdb->pmpro_memberships_users SET membership_id = $to_level_id WHERE membership_id = $from_level_id AND status = 'active';" );
 
@@ -339,7 +457,7 @@ function pmprodev_give_level( $message ) {
 	$give_level_enddate = sanitize_text_field( $_REQUEST['give_level_enddate'] );
 
 	if ( $give_level_id < 1 || empty( $give_level_startdate ) ) {
-		pmprodev_output_message( __( 'Please enter a valid level ID and start date.', 'pmpro-toolkit' ) );
+		pmprodev_output_message( __( 'Please enter a valid level ID and start date.', 'pmpro-toolkit' ), 'warning' );
 	} else {
 		$sqlQuery = $wpdb->prepare(
 			"INSERT INTO {$wpdb->pmpro_memberships_users} (user_id, membership_id, status, startdate, enddate)
@@ -370,7 +488,7 @@ function pmprodev_cancel_level( $message ) {
 	$user_ids = $wpdb->get_col( "SELECT user_id FROM $wpdb->pmpro_memberships_users WHERE membership_id = $cancel_level_id AND status = 'active'" );
 
 	if ( empty( $user_ids ) ) {
-		pmprodev_output_message( sprintf( __( 'Couldn\'t find users with level ID %d.', 'pmpro-toolkit' ), $cancel_level_id ) );
+		pmprodev_output_message( sprintf( __( 'Couldn\'t find users with level ID %d.', 'pmpro-toolkit' ), $cancel_level_id ), 'warning' );
 	} else {
 		pmprodev_output_message( sprintf( __( 'Cancelling %s users...', 'pmpro-toolkit' ), count( $user_ids ) ) );
 		foreach ( $user_ids as $user_id ) {
@@ -426,7 +544,7 @@ function pmprodev_delete_incomplete_orders( $message ) {
 }
 
 function pmprodev_output_message( $message, $type = 'success' ) {
-	echo '<div class="notice notice-' . esc_attr( $type ) . ' is-dismissible"><p>' . esc_html( $message ) . '</p></div>';
+	echo '<div class="notice notice-' . esc_attr( $type ) . 'f"><p>' . esc_html( $message ) . '</p></div>';
 }
 
 function pmprodev_process_complete() {

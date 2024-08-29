@@ -9,26 +9,33 @@
 
 	//$section = !empty( $_REQUEST['section']  ) ? sanitize_text_field( $_REQUEST[ 'section' ] ) : 'options';
 	$section = pmpro_getParam( 'section', 'REQUEST', 'options', );
-
 ?>
-<h1><?php esc_html_e( 'Developer\'s Toolkit', 'pmpro-toolkit' ); ?></h1>
+<h1><?php esc_html_e( "Developer's Toolkit", 'pmpro-toolkit' ); ?></h1>
 
 <!-- nav tabs -->
 
-<h2 class="nav-tab-wrapper">
-	<a href="?page=pmpro-toolkit" class="nav-tab
-	<?php if( $section == 'options' ) { echo ' nav-tab-active'; } ?>">
-		<?php esc_html_e( 'Toolkit Options', 'pmpro-toolkit' ); ?>
-	</a>
-	<a href="?page=pmpro-toolkit&section=scripts" class="nav-tab
-	<?php if( $section == 'scripts' ) { echo ' nav-tab-active'; } ?>">
-		<?php esc_html_e( 'Database Scripts', 'pmpro-toolkit' ); ?>
-	</a>
-	<a href="?page=pmpro-toolkit&section=migration" class="nav-tab
-	<?php if( $section == 'migration' ) { echo ' nav-tab-active'; } ?>">
-		<?php esc_html_e( 'Migration Assistant', 'pmpro-toolkit' ); ?>
-	</a>
-</h2>
+<nav class="pmpro-nav-primary" aria-labelledby="pmpro-toolkit-menu">
+	<h2 id="pmpro-toolkit-menu" class="screen-reader-text"><?php esc_html_e( 'Toolkit Menu', 'pmpro-toolkit' ); ?></h2>
+	<ul>
+		<li>
+			<a href="<?php echo esc_url( add_query_arg( array( 'page' => 'pmpro-toolkit', 'section' => 'options' ), admin_url( 'admin.php' ) ) ); ?>"<?php if ( $section == 'options') { ?> class="current"<?php } ?>>
+				<?php esc_html_e( 'Toolkit Options', 'pmpro-toolkit' ); ?>
+			</a>
+		</li>
+		<li>
+			<a href="<?php echo esc_url( add_query_arg( array( 'page' => 'pmpro-toolkit', 'section' => 'scripts' ), admin_url( 'admin.php' ) ) ); ?>"<?php if ( $section == 'scripts' ) { ?> class="current"<?php } ?>>
+				<?php esc_html_e( 'Database Scripts', 'pmpro-toolkit' ); ?>
+			</a>
+		</li>
+		<li>
+			<a href="<?php echo esc_url( add_query_arg( array( 'page' => 'pmpro-toolkit', 'section' => 'migration' ), admin_url( 'admin.php' ) ) ); ?>"<?php if ( $section == 'migration' ) { ?> class="current"<?php } ?>>
+				<?php esc_html_e( 'Migration Assistant', 'pmpro-toolkit' ); ?>
+			</a>
+		</li>
+	</ul>
+</nav>
+
+<hr class="wp-header-end">
 
 <?php
 	// Show the appropriate section.

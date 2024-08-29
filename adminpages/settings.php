@@ -4,10 +4,7 @@
 		die( esc_html__( "You do not have permissions to perform this action.", 'pmpro-toolkit' ) );
 	}
 
-	global $msg, $msgt;
-	global $pmprodev_options;
-
-	global $msg, $msgt;
+	global $msg, $msgt, $pmprodev_options;
 
 	// Bail if nonce field isn't set.
 	if ( !empty( $_REQUEST['savesettings'] ) && ( empty( $_REQUEST[ 'pmpro_toolkit_nonce' ] ) 
@@ -50,135 +47,39 @@
 
 		update_option( "pmprodev_options", $pmprodev_options );
 
-
 		// Assume success.
 		$msg = true;
-		$msgt = __( "Dev toolkit settings have been updated.", 'pmpro-toolkit' );
+		$msgt = __( "Your developer's toolkit settings have been updated.", 'pmpro-toolkit' );
 
 	}
 
+	// Show the contextual messages on our admin pages.
+	if ( ! empty( $msg ) ) { ?>
+		<div id="message" class="<?php if($msg > 0) echo "updated fade"; else echo "error"; ?>"><p><?php echo wp_kses_post( $msgt );?></p></div>
+		<?php
+	}
 ?>
-<div class="wrap pmpro_admin">
-	<form action="" method="POST" enctype="multipart/form-data">
-		<?php wp_nonce_field( 'savesettings', 'pmpro_toolkit_nonce' );?>
-
-		<!--Email debugging section -->
-		<div class="pmpro_section" data-visibility="shown" data-activated="true">
-			<div class="pmpro_section_toggle">
-				<button class="pmpro_section-toggle-button" type="button" aria-expanded="true">
-					<span class="dashicons dashicons-arrow-up-alt2"></span>
-					<?php esc_html_e( 'Email debugging', 'pmpro-toolkit' ); ?>
-				</button>
-			</div>
-			<div class="pmpro_section_inside">
-				<table class="form-table">
-					<tbody>
-						<tr>
-							<th scope="row" valign="top">
-								<label for="pmprodev_options[redirect_email]"> <?php esc_html_e( 'Redirect PMPro Emails', 'pmpro-toolkit' ); ?></label>
-							</th>
-							<td>
-								<input type="email" id="pmprodev_options[redirect_email]" name="pmprodev_options[redirect_email]" value="<?php echo esc_attr( $pmprodev_options['redirect_email'] ); ?>">
-								<p class="description"><?php echo esc_html_e( 'Redirect all Paid Memberships Pro emails to a specific address.', 'pmpro-toolkit' ); ?></p>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
+<h2><?php esc_html_e( 'Toolkit Options', 'pmpro-toolkit' ); ?></h2>
+<form action="" method="POST" enctype="multipart/form-data">
+	<?php wp_nonce_field( 'savesettings', 'pmpro_toolkit_nonce' );?>
+	<!-- Email debugging section -->
+	<div class="pmpro_section" data-visibility="shown" data-activated="true">
+		<div class="pmpro_section_toggle">
+			<button class="pmpro_section-toggle-button" type="button" aria-expanded="true">
+				<span class="dashicons dashicons-arrow-up-alt2"></span>
+				<?php esc_html_e( 'Email Debugging', 'pmpro-toolkit' ); ?>
+			</button>
 		</div>
-		
-		<!--Scheduled Cron Job Debugging section -->
-		<div class="pmpro_section" data-visibility="shown" data-activated="true">
-			<div class="pmpro_section_toggle">
-				<button class="pmpro_section-toggle-button" type="button" aria-expanded="true">
-					<span class="dashicons dashicons-arrow-up-alt2"></span>
-					<?php esc_html_e( 'Scheduled Cron Job Debugging', 'pmpro-toolkit' ); ?>
-				</button>
-			</div>
-			<div class="pmpro_section_inside">
-				<table class="form-table">
-					<tbody>
-						<!--  Expire Memberships row  -->
-						<tr>
-							<th scope="row" valign="top">
-								<label for="expire_memberships"><?php esc_html_e( 'Expire Memberships', 'pmpro-toolkit' ); ?></label>
-							</th>
-							<td>
-								<input id="expire_memberships" type="checkbox"  name="pmprodev_options[expire_memberships]" value="1" <?php checked( $pmprodev_options['expire_memberships'], 1, true ); ?>>
-								<label for="expire_memberships">
-									<?php echo esc_html_e( 'Check to disable the script that checks for expired memberships.', 'pmpro-toolkit' ); ?>
-								</label>
-							</td>
-						</tr>
-						<!-- another row but for Expiration Warning -->
-						<tr>
-							<th scope="row" valign="top">
-								<label for="expiration_warnings"><?php esc_html_e( 'Expiration Warnings', 'pmpro-toolkit' ); ?></label>
-							</th>
-							<td>
-								<input id="expiration_warnings" type="checkbox" name="pmprodev_options[expiration_warnings]" value="1" <?php checked( $pmprodev_options['expiration_warnings'], 1, true ); ?>>
-								<label for="expiration_warnings">
-									<?php echo esc_html_e( 'Check to disable the script that sends expiration warnings.', 'pmpro-toolkit' ); ?>
-								</label>
-							</td>
-						<tr>
-						<!-- another row but for Credit Card Expiring -->
-						<tr>
-							<th scope="row" valign="top">
-								<label for="credit_card_expiring"><?php esc_html_e( 'Credit Card Expiring', 'pmpro-toolkit' ); ?></label>
-							</th>
-							<td>
-								<input id="credit_card_expiring" type="checkbox" name="pmprodev_options[credit_card_expiring]" value="1" <?php checked( $pmprodev_options['credit_card_expiring'], 1, true ); ?>>
-								<label for="credit_card_expiring">
-									<?php echo esc_html_e( 'Check to disable the script that checks for expired credit cards.', 'pmpro-toolkit' ); ?>
-								</label>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-
-		<!--Gateway/Checkout Debugging section -->
-		<div class="pmpro_section" data-visibility="shown" data-activated="true">
-			<div class="pmpro_section_toggle">
-				<button class="pmpro_section-toggle-button" type="button" aria-expanded="true">
-					<span class="dashicons dashicons-arrow-up-alt2"></span>
-					<?php esc_html_e( 'Gateway/Checkout Debugging', 'pmpro-toolkit' ); ?>
-				</button>
-			</div>
-			<div class="pmpro_section_inside">
-				<table class="form-table">
+		<div class="pmpro_section_inside">
+			<table class="form-table">
 				<tbody>
-					<!--  Expire Memberships row  -->
 					<tr>
 						<th scope="row" valign="top">
-							<label for="ipn_debug"><?php esc_html_e( 'Gateway Callback Debug Email', 'pmpro-toolkit' ); ?></label>
-						</th>
-							<td>
-							<input type="email" id="ipn_debug" name="pmprodev_options[ipn_debug]" value="<?php echo esc_attr( $pmprodev_options['ipn_debug'] ); ?>">
-							<label for="ipn_debug">
-									<?php echo esc_html_e( 'Check to disable the script that checks for expired memberships.', 'pmpro-toolkit' ); ?>
-							</label>
-						</td>
-					</tr>
-					<!-- another row but for Send Checkout Debug Email	 -->
-					<tr>
-						<th scope="row" valign="top">
-							<label for="checkout_debug_email"><?php esc_html_e( 'Send Checkout Debug Email', 'pmpro-toolkit' ); ?></label>
+							<label for="pmprodev_options[redirect_email]"> <?php esc_html_e( 'Redirect PMPro Emails', 'pmpro-toolkit' ); ?></label>
 						</th>
 						<td>
-							<select name="pmprodev_options[checkout_debug_when]">
-								<option value="" <?php selected( $pmprodev_options['checkout_debug_when'], '' ); ?>><?php esc_html_e( 'Never (Off)', 'pmpro-toolkit' ); ?></option>
-								<option value="on_checkout" <?php selected( $pmprodev_options['checkout_debug_when'], 'on_checkout' ); ?>><?php esc_html_e( 'Yes, Every Page Load', 'pmpro-toolkit' ); ?></option>
-								<option value="on_submit" <?php selected( $pmprodev_options['checkout_debug_when'], 'on_submit' ); ?>><?php esc_html_e( 'Yes, Submitted Forms Only', 'pmpro-toolkit' ); ?></option>
-								<option value="on_error" <?php selected( $pmprodev_options['checkout_debug_when'], 'on_error' ); ?>><?php esc_html_e( 'Yes, Errors Only', 'pmpro-toolkit' ); ?></option>
-							</select>
-							<span><?php esc_html_e( 'to email:', 'pmpro-toolkit' ); ?></span><input type="email" id="checkout_debug_email" name="pmprodev_options[checkout_debug_email]" value="<?php echo esc_attr( $pmprodev_options['checkout_debug_email'] ); ?>">
-							<p class="description">
-								<?php esc_html_e( 'Send an email every time the Checkout page is hit.', 'pmpro-toolkit' ); ?>
-							</p>
-							<p><?php esc_html_e( 'This email will contain data about the request, user, membership level, order, and other information.', 'pmpro-toolkit' ); ?></p>
+							<input type="email" id="pmprodev_options[redirect_email]" name="pmprodev_options[redirect_email]" value="<?php echo esc_attr( $pmprodev_options['redirect_email'] ); ?>" class="regular-text">
+							<p class="description"><?php esc_html_e( 'Redirect all Paid Memberships Pro emails to a specific address.', 'pmpro-toolkit' ); ?></p>
 						</td>
 					</tr>
 				</tbody>
@@ -186,15 +87,106 @@
 		</div>
 	</div>
 
-		<p class="submit topborder">
-			<input name="savesettings" type="submit" class="button-primary" value="<?php esc_html_e( 'Save Settings', 'pmpro-toolkit' ); ?>">
-		</p>
-	</form>
+	<!--Scheduled Cron Job Debugging section -->
+	<div class="pmpro_section" data-visibility="shown" data-activated="true">
+		<div class="pmpro_section_toggle">
+			<button class="pmpro_section-toggle-button" type="button" aria-expanded="true">
+				<span class="dashicons dashicons-arrow-up-alt2"></span>
+				<?php esc_html_e( 'Scheduled Cron Job Debugging', 'pmpro-toolkit' ); ?>
+			</button>
+		</div>
+		<div class="pmpro_section_inside">
+			<table class="form-table">
+				<tbody>
+					<!--  Expire Memberships row  -->
+					<tr>
+						<th scope="row" valign="top">
+							<label for="expire_memberships"><?php esc_html_e( 'Expire Memberships', 'pmpro-toolkit' ); ?></label>
+						</th>
+						<td>
+							<input id="expire_memberships" type="checkbox"  name="pmprodev_options[expire_memberships]" value="1" <?php checked( $pmprodev_options['expire_memberships'], 1, true ); ?>>
+							<label for="expire_memberships">
+								<?php esc_html_e( 'Check to disable the script that checks for expired memberships.', 'pmpro-toolkit' ); ?>
+							</label>
+						</td>
+					</tr>
+					<!-- another row but for Expiration Warning -->
+					<tr>
+						<th scope="row" valign="top">
+							<label for="expiration_warnings"><?php esc_html_e( 'Expiration Warnings', 'pmpro-toolkit' ); ?></label>
+						</th>
+						<td>
+							<input id="expiration_warnings" type="checkbox" name="pmprodev_options[expiration_warnings]" value="1" <?php checked( $pmprodev_options['expiration_warnings'], 1, true ); ?>>
+							<label for="expiration_warnings">
+								<?php esc_html_e( 'Check to disable the script that sends expiration warnings.', 'pmpro-toolkit' ); ?>
+							</label>
+						</td>
+					<tr>
+					<!-- another row but for Credit Card Expiring -->
+					<tr>
+						<th scope="row" valign="top">
+							<label for="credit_card_expiring"><?php esc_html_e( 'Credit Card Expiring', 'pmpro-toolkit' ); ?></label>
+						</th>
+						<td>
+							<input id="credit_card_expiring" type="checkbox" name="pmprodev_options[credit_card_expiring]" value="1" <?php checked( $pmprodev_options['credit_card_expiring'], 1, true ); ?>>
+							<label for="credit_card_expiring">
+								<?php esc_html_e( 'Check to disable the script that checks for expired credit cards.', 'pmpro-toolkit' ); ?>
+							</label>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 
-
-
-
-
-
-		
+	<!--Gateway/Checkout Debugging section -->
+	<div class="pmpro_section" data-visibility="shown" data-activated="true">
+		<div class="pmpro_section_toggle">
+			<button class="pmpro_section-toggle-button" type="button" aria-expanded="true">
+				<span class="dashicons dashicons-arrow-up-alt2"></span>
+				<?php esc_html_e( 'Gateway/Checkout Debugging', 'pmpro-toolkit' ); ?>
+			</button>
+		</div>
+		<div class="pmpro_section_inside">
+			<table class="form-table">
+			<tbody>
+				<!--  Expire Memberships row  -->
+				<tr>
+					<th scope="row" valign="top">
+						<label for="ipn_debug"><?php esc_html_e( 'Gateway Callback Debug Email', 'pmpro-toolkit' ); ?></label>
+					</th>
+					<td>
+						<input type="email" id="ipn_debug" name="pmprodev_options[ipn_debug]" value="<?php echo esc_attr( $pmprodev_options['ipn_debug'] ); ?>" class="regular-text">
+						<p class="description">
+							<?php esc_html_e( 'Enter an email address to receive a debugging email every time the gateway processes data.', 'pmpro-toolkit' ); ?>
+						</p>
+					</td>
+				</tr>
+				<!-- another row but for Send Checkout Debug Email	 -->
+				<tr>
+					<th scope="row" valign="top">
+						<label for="checkout_debug_email"><?php esc_html_e( 'Send Checkout Debug Email', 'pmpro-toolkit' ); ?></label>
+					</th>
+					<td>
+						<select name="pmprodev_options[checkout_debug_when]">
+							<option value="" <?php selected( $pmprodev_options['checkout_debug_when'], '' ); ?>><?php esc_html_e( 'Never (Off)', 'pmpro-toolkit' ); ?></option>
+							<option value="on_checkout" <?php selected( $pmprodev_options['checkout_debug_when'], 'on_checkout' ); ?>><?php esc_html_e( 'Yes, Every Page Load', 'pmpro-toolkit' ); ?></option>
+							<option value="on_submit" <?php selected( $pmprodev_options['checkout_debug_when'], 'on_submit' ); ?>><?php esc_html_e( 'Yes, Submitted Forms Only', 'pmpro-toolkit' ); ?></option>
+							<option value="on_error" <?php selected( $pmprodev_options['checkout_debug_when'], 'on_error' ); ?>><?php esc_html_e( 'Yes, Errors Only', 'pmpro-toolkit' ); ?></option>
+						</select>
+						<span><?php esc_html_e( 'to email:', 'pmpro-toolkit' ); ?></span>
+						<input type="email" id="checkout_debug_email" name="pmprodev_options[checkout_debug_email]" value="<?php echo esc_attr( $pmprodev_options['checkout_debug_email'] ); ?>">
+						<p class="description">
+							<?php esc_html_e( 'Send an email every time the Checkout page is hit.', 'pmpro-toolkit' ); ?>
+							<?php esc_html_e( 'This email will contain data about the request, user, membership level, order, and other information.', 'pmpro-toolkit' ); ?>
+						</p>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<p class="submit">
+	<input name="savesettings" type="submit" class="button-primary" value="<?php esc_html_e( 'Save Settings', 'pmpro-toolkit' ); ?>">
+</p>
+</form>
