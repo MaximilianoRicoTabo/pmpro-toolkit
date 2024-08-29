@@ -88,7 +88,7 @@ $other_actions = array(
 	'pmprodev_delete_incomplete_orders' => array(
 		'label' => __( 'Delete Incomplete Orders', 'pmpro-toolkit' ),
 		'description' => __( 'Delete all orders in token, pending, or review status that are older than a specified number of days.', 'pmpro-toolkit' ),
-		'message' => __( 'Incomplete orders deleted.', 'pmpro-toolkit' )
+		'message' => __( '%d orders deleted.', 'pmpro-toolkit' )
 	)
 );
 
@@ -271,42 +271,21 @@ $other_actions = array(
 	</p>
 </form>
 
-<script>
+<script type="text/javascript">
+// Show/hide actions for each script below
+	const actions = [
+		'move_level',
+		'give_level',
+		'cancel_level',
+		'copy_memberships_pages',
+		'delete_incomplete_orders'
+	];
+
 	jQuery(document).ready(function($) {
-		$('#pmprodev_move_level').change(function() {
-			if ($(this).is(':checked')) {
-				$('#pmprodev_move_level_actions').show();
-			} else {
-				$('#pmprodev_move_level_actions').hide();
-			}
-		});
-		$('#pmprodev_give_level').change(function() {
-			if ($(this).is(':checked')) {
-				$('#pmprodev_give_level_actions').show();
-			} else {
-				$('#pmprodev_give_level_actions').hide();
-			}
-		});
-		$('#pmprodev_cancel_level').change(function() {
-			if ($(this).is(':checked')) {
-				$('#pmprodev_cancel_level_actions').show();
-			} else {
-				$('#pmprodev_cancel_level_actions').hide();
-			}
-		});
-		$('#pmprodev_copy_memberships_pages').change(function() {
-			if ($(this).is(':checked')) {
-				$('#pmprodev_copy_memberships_pages_actions').show();
-			} else {
-				$('#pmprodev_copy_memberships_pages_actions').hide();
-			}
-		});
-		$('#pmprodev_delete_incomplete_orders').change(function() {
-			if ($(this).is(':checked')) {
-				$('#pmprodev_delete_incomplete_orders_actions').show();
-			} else {
-				$('#pmprodev_delete_incomplete_orders_actions').hide();
-			}
+		actions.forEach( action => {
+			$('#pmprodev_' + action ).change(function() {
+				$('#pmprodev_' + action + '_actions').toggle( $(this).is( ':checked' ) );
+			});
 		});
 	});
 </script>
@@ -326,6 +305,14 @@ foreach ( $actions as $action => $options ) {
 	}
 }
 
+/**
+ * Output a message to the user.
+ *
+ * @param string $message The message to display.
+ * @param string $type The type of message to display.
+ * @since TBD
+ * @return void
+ */
 function pmprodev_clean_member_tables( $message ) {
 	global $wpdb, $pmprodev_member_tables;
 	foreach ( $pmprodev_member_tables as $table ) {
@@ -335,6 +322,13 @@ function pmprodev_clean_member_tables( $message ) {
 	pmprodev_output_message( $message );
 }
 
+/**
+ * Reset all membership level, content protection, and discount code settings.
+ *
+ * @param string $message The message to display after the process is complete.
+ * @since TBD
+ * @return void
+ */
 function pmprodev_clean_level_data( $message ) {
 	global $wpdb, $pmprodev_other_tables;
 	foreach ( $pmprodev_other_tables as $table ) {
@@ -343,6 +337,13 @@ function pmprodev_clean_level_data( $message ) {
 	pmprodev_output_message( $message );
 }
 
+/**
+ * Scrub all member emails and transaction IDs.
+ *
+ * @param string $message The message to display after the process is complete.
+ * @since TBD
+ * @return void
+ */
 function pmprodev_scrub_member_data( $message ) {
 	global $wpdb;
 	pmprodev_output_message( $message );
@@ -366,6 +367,13 @@ function pmprodev_scrub_member_data( $message ) {
 	pmprodev_process_complete();
 }
 
+/**
+ * Delete all non-admin users.
+ *
+ * @param string $message The message to display after the process is complete.
+ * @since TBD
+ * @return void
+ */
 function pmprodev_delete_users( $message ) {
 	global $wpdb;
 	pmprodev_output_message( $message );
@@ -380,6 +388,13 @@ function pmprodev_delete_users( $message ) {
 	pmprodev_process_complete();
 }
 
+/**
+ * Reset all PMPro options.
+ *
+ * @param string $message The message to display after the process is complete.
+ * @since TBD
+ * @return void
+ */
 function pmprodev_clean_pmpro_options( $message ) {
 	delete_option( 'pmpro_db_version' );
 	delete_option( 'pmpro_membership_levels' );
@@ -408,6 +423,13 @@ function pmprodev_clean_pmpro_options( $message ) {
 	pmprodev_output_message( $message );
 }
 
+/**
+ * Clear and reset all visits, views, and logins report data.
+ *
+ * @param string $message The message to display after the process is complete.
+ * @since TBD
+ * @return void
+ */
 function pmprodev_clear_vvl_report( $message ) {
 	global $wpdb;
 	$wpdb->query( "TRUNCATE {$wpdb->pmpro_visits}" );
@@ -428,6 +450,7 @@ function pmprodev_delete_test_orders( $message ) {
 	$wpdb->query( "DELETE FROM {$wpdb->pmpro_membership_orders} WHERE gateway_environment = 'sandbox'" );
 	pmprodev_output_message( $message );
 }
+
 /** Clear cached report data
  *
  * @param string $message The message to display after the process is complete.
@@ -441,35 +464,52 @@ function pmprodev_clear_cached_report_data( $message ) {
 	pmprodev_output_message( $message );
 }
 
-// Move level function
+/**
+ * Move all users with a specific membership level to another membership level.
+ *
+ * @param string $message The message to display after the process is complete.
+ * @since TBD
+ * @return void
+ */
 function pmprodev_move_level( $message ) {
 	global $wpdb;
-
-	pmprodev_output_message( $message );
 
 	$from_level_id = intval( $_REQUEST['move_level_a'] );
 	$to_level_id = intval( $_REQUEST['move_level_b'] );
 
+	//Bail if the level IDs are invalid
 	if ( $from_level_id < 1 || $to_level_id < 1 ) {
-		pmprodev_output_message( __( 'Please enter a level ID > 1 for each option.', 'pmpro-toolkit' ), 'warning' );
-	} else {
-		$user_ids = $wpdb->get_col( "SELECT user_id FROM $wpdb->pmpro_memberships_users WHERE membership_id = $from_level_id AND status = 'active'" );
-
-		if ( empty( $user_ids ) ) {
-			pmprodev_output_message( sprintf( __( 'Couldn\'t find users with level ID %d.', 'pmpro-toolkit' ), $from_level_id ), 'warning' );
-		} else {
-			$wpdb->query( "UPDATE $wpdb->pmpro_memberships_users SET membership_id = $to_level_id WHERE membership_id = $from_level_id AND status = 'active';" );
-
-			foreach ( $user_ids as $user_id ) {
-				do_action( 'pmpro_after_change_membership_level', $to_level_id, $user_id, $from_level_id );
-			}
-
-			pmprodev_process_complete();
-		}
+		pmprodev_output_message( __( 'Please enter a level ID > 0 for each option.', 'pmpro-toolkit' ), 'warning' );
+		pmprodev_expand_actions( 'pmprodev_move_level' );
+		return;
 	}
+
+	$user_ids = $wpdb->get_col( "SELECT user_id FROM $wpdb->pmpro_memberships_users WHERE membership_id = $from_level_id AND status = 'active'" );
+
+	//Bail if no users found
+	if ( empty( $user_ids ) ) {
+		pmprodev_output_message( sprintf( __( 'Couldn\'t find users with level ID %d.', 'pmpro-toolkit' ), $from_level_id ), 'warning' );
+		pmprodev_expand_actions( 'pmprodev_move_level' );
+		return;
+	}
+
+	$wpdb->query( "UPDATE $wpdb->pmpro_memberships_users SET membership_id = $to_level_id WHERE membership_id = $from_level_id AND status = 'active';" );
+	pmprodev_output_message( $message );
+	foreach ( $user_ids as $user_id ) {
+		do_action( 'pmpro_after_change_membership_level', $to_level_id, $user_id, $from_level_id );
+	}
+
+	pmprodev_process_complete();
+
 }
 
-// Give level function
+/**
+ * Given a membership level ID, start date and end date  assign that level to all users without an active membership.
+ *
+ * @param string $message The message to display after the process is complete.
+ * @since TBD
+ * @return void
+ */
 function pmprodev_give_level( $message ) {
 	global $wpdb;
 
@@ -477,50 +517,74 @@ function pmprodev_give_level( $message ) {
 	$give_level_startdate = sanitize_text_field( $_REQUEST['give_level_startdate'] );
 	$give_level_enddate = sanitize_text_field( $_REQUEST['give_level_enddate'] );
 
+	//bail if the level ID is invalid
 	if ( $give_level_id < 1 || empty( $give_level_startdate ) ) {
 		pmprodev_output_message( __( 'Please enter a valid level ID and start date.', 'pmpro-toolkit' ), 'warning' );
-	} else {
-		$sqlQuery = $wpdb->prepare(
-			"INSERT INTO {$wpdb->pmpro_memberships_users} (user_id, membership_id, status, startdate, enddate)
-			SELECT u.ID, %d, 'active', %s, %s
-			FROM {$wpdb->users} u 
-			LEFT JOIN {$wpdb->pmpro_memberships_users} mu
-			ON u.ID = mu.user_id 
-			AND mu.status = 'active' 
-			WHERE mu.id IS NULL;",
-			$give_level_id,
-			$give_level_startdate,
-			$give_level_enddate
-		);
-
-		$wpdb->query( $sqlQuery );
-
-		pmprodev_output_message( $message );
+		pmprodev_expand_actions( 'pmprodev_give_level' );
+		return;
 	}
+
+	$sqlQuery = $wpdb->prepare(
+		"INSERT INTO {$wpdb->pmpro_memberships_users} (user_id, membership_id, status, startdate, enddate)
+		SELECT u.ID, %d, 'active', %s, %s
+		FROM {$wpdb->users} u 
+		LEFT JOIN {$wpdb->pmpro_memberships_users} mu
+		ON u.ID = mu.user_id 
+		AND mu.status = 'active' 
+		WHERE mu.id IS NULL;",
+		$give_level_id,
+		$give_level_startdate,
+		$give_level_enddate
+	);
+
+	$wpdb->query( $sqlQuery );
+
+	$message = sprintf( $message, $wpdb->rows_affected, $give_level_id );
+
+	pmprodev_output_message( $message );
 }
 
-// Cancel level function
+/**
+ * Cancel all users with a specific membership level.
+ *
+ * @param string $message The message to display after the process is complete.
+ * @since TBD
+ * @return void
+ */
 function pmprodev_cancel_level( $message ) {
 	global $wpdb;
 
-	pmprodev_output_message( $message );
-
 	$cancel_level_id = intval( $_REQUEST['cancel_level_id'] );
 	$user_ids = $wpdb->get_col( "SELECT user_id FROM $wpdb->pmpro_memberships_users WHERE membership_id = $cancel_level_id AND status = 'active'" );
+	// Bail if the level ID is invalid
+	if ( $cancel_level_id < 1 ) {
+		pmprodev_output_message( __( 'Please enter a valid level ID.', 'pmpro-toolkit' ), 'warning' );
+		pmprodev_expand_actions( 'pmprodev_cancel_level' );
+		return;
+	}
 
+	//Bail if no users found
 	if ( empty( $user_ids ) ) {
 		pmprodev_output_message( sprintf( __( 'Couldn\'t find users with level ID %d.', 'pmpro-toolkit' ), $cancel_level_id ), 'warning' );
-	} else {
-		pmprodev_output_message( sprintf( __( 'Cancelling %s users...', 'pmpro-toolkit' ), count( $user_ids ) ) );
-		foreach ( $user_ids as $user_id ) {
-			pmpro_cancelMembershipLevel( $cancel_level_id, $user_id );
-		}
-
-		pmprodev_process_complete();
+		pmprodev_expand_actions( 'pmprodev_cancel_level' );
 	}
+
+	$message = sprintf( $message, count( $user_ids ) );
+	pmprodev_output_message( $message );
+	foreach ( $user_ids as $user_id ) {
+		pmpro_cancelMembershipLevel( $cancel_level_id, $user_id );
+	}
+
+	pmprodev_process_complete();
 }
 
-// Copy memberships pages function
+/**
+ * Copy content restrictions from one membership level to another.
+ *
+ * @param string $message The message to display after the process is complete.
+ * @since TBD
+ * @return void
+ */
 function pmprodev_copy_memberships_pages( $message ) {
 	global $wpdb;
 
@@ -539,21 +603,30 @@ function pmprodev_copy_memberships_pages( $message ) {
 	pmprodev_output_message( $message );
 }
 
-// Delete incomplete orders function
+/**
+ * Delete all orders in token, pending, or review status that are older than a specified number of days.
+ *
+ * @param string $message The message to display after the process is complete.
+ * @since TBD
+ * @return void
+ */
 function pmprodev_delete_incomplete_orders( $message ) {
 	global $wpdb;
 
-	if ( empty( $_REQUEST['delete_incomplete_orders_days'] ) ) {
+	if ( empty( $_REQUEST['delete_incomplete_orders_days']  ) ) {
 		pmprodev_output_message( __( 'Please enter a number of days.', 'pmpro-toolkit' ), 'warning' );
-		return;
-	}
-
-	if ( ! is_numeric( $_REQUEST['delete_incomplete_orders_days'] ) || intval( $_REQUEST['delete_incomplete_orders_days'] ) < 1 ) {
-		pmprodev_output_message( __( 'Please enter a valid number of days.', 'pmpro-toolkit' ), 'warning' );
+		pmprodev_expand_actions( 'pmprodev_delete_incomplete_orders' );
 		return;
 	}
 
 	$days = intval( $_REQUEST['delete_incomplete_orders_days'] );
+
+	if ( ! is_numeric( $days ) || intval( $days ) < 1 ) {
+		pmprodev_output_message( __( 'Please enter a valid number of days.', 'pmpro-toolkit' ), 'warning' );
+		pmprodev_expand_actions( 'pmprodev_delete_incomplete_orders' );
+		return;
+	}
+
 	$deleted = $wpdb->query(
 		$wpdb->prepare(
 			"DELETE FROM {$wpdb->pmpro_membership_orders} WHERE status IN('token', 'pending', 'review') AND timestamp < %s",
@@ -561,9 +634,17 @@ function pmprodev_delete_incomplete_orders( $message ) {
 		)
 	);
 
-	pmprodev_output_message( sprintf( __( '%d orders deleted.', 'pmpro-toolkit' ), (int) $deleted ) );
+	pmprodev_output_message( sprintf( $message, (int) $deleted ) );
 }
 
+/**
+ * Output a message to the screen.
+ *
+ * @param string $message The message to display.
+ * @param string $type The type of message to display.
+ * @since TBD
+ * @return void
+ */
 function pmprodev_output_message( $message, $type = 'success' ) {
 	if ( empty( $message ) ) {
 		return;
@@ -571,7 +652,31 @@ function pmprodev_output_message( $message, $type = 'success' ) {
 	echo '<div class="notice notice-' . esc_attr( $type ) . '"><p>' . esc_html( $message ) . '</p></div>';
 }
 
+/**
+ * Output a message to the screen when a process is complete.
+ *
+ * @since TBD
+ * @return void
+ */
 function pmprodev_process_complete() {
 	echo '<div class="notice notice-success"><p>' . esc_html__( 'Process complete.', 'pmpro-toolkit' ) . '</p></div>';
+}
+
+/**
+ * Expand the actions after dom is ready.
+ *
+ * @param string $action The action to expand.
+ * @since TBD
+ * @return void
+ */
+function pmprodev_expand_actions( $action ) {
+	?>
+	<script>
+		jQuery(document).ready(function($) {
+			$('#<?php echo esc_attr( $action ); ?>').prop('checked', true);
+			$('#<?php echo esc_attr( $action ); ?>_actions').show();
+		});
+	</script>
+	<?php
 }
 ?>
