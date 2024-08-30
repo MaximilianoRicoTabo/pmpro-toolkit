@@ -198,7 +198,7 @@ class PMProDev_Migration_Assistant {
 				}
 			} else {
 				// This is a legacy import with only levels. Create a new group for them.
-				$created_group_id = pmpro_create_level_group( 'Imported Group', false );
+				$created_group_id = pmpro_create_level_group( __( 'Imported Group', 'pmpro-toolkit' ), false );
 				self::import_data_levels( $levels_data, $created_group_id );
 			}
 			return;
