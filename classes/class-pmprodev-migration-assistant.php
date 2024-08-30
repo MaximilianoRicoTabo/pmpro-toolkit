@@ -142,14 +142,31 @@ class PMProDev_Migration_Assistant {
 			$levels[ $level_meta->pmpro_membership_level_id ]->metadata[ $level_meta->meta_key ] = $level_meta->meta_value;
 		}
 
-		// Get rid of references to current level ID which will likely change at import.
-		$levels = array_values( $levels );
-		foreach ( $levels as $level ) {
+		// Get rid of references to current level ID in $level, which will likely change at import.
+		foreach ( $levels as $level_id => $level ) {
 			unset( $level->id );
 		}
 
-		// Return the levels export data.
-		return $levels;
+		// Get all of the level groups.
+		$level_groups = pmpro_get_level_groups();
+		foreach( $level_groups as $group_id => $group_data ) {
+			// Get rid of the ID in the group data. This will likely change at import.
+			unset( $group_data->id );
+
+			// Set up the $level property for the group.
+			$group_data->levels = array();
+
+			// Get the level IDs that are a part of this group.
+			$group_level_ids = pmpro_get_level_ids_for_group( $group_id );			
+
+			// Add the level objects from $levels to the group.
+			foreach( $group_level_ids as $level_id ) {
+				$group_data->levels[] = $levels[ $level_id ];
+			}
+		}
+
+		// Return the levels export data without the group IDs as keys.
+		return array_values( $level_groups );
 	}
 
 	/**
@@ -164,8 +181,28 @@ class PMProDev_Migration_Assistant {
 	 *
 	 * @return string|null The error message, if any, or null if no error.
 	 */
-	private static function import_data_levels( $levels_data ) {
+	private static function import_data_levels( $levels_data, $group_id = null ) {
 		global $wpdb;
+
+		// If $group_id is not passed, we need to create a new group to add levels to.
+		if ( empty( $group_id ) ) {
+			// Check if the first element is a group object.
+			if ( isset( current( $levels_data )['levels'] ) ) {
+				// We are importing groups. Import data recursively.
+				foreach ( $levels_data as $group ) {
+					// Create the group.
+					$created_group_id = pmpro_create_level_group( $group['name'], $group['allow_multiple_selections'], $group['displayorder'] );
+
+					// Import the levels.
+					self::import_data_levels( $group['levels'], $created_group_id );
+				}
+			} else {
+				// This is a legacy import with only levels. Create a new group for them.
+				$created_group_id = pmpro_create_level_group( __( 'Imported Group', 'pmpro-toolkit' ), false );
+				self::import_data_levels( $levels_data, $created_group_id );
+			}
+			return;
+		}
 
 		// Import the levels.
 		foreach ( $levels_data as $level ) {
@@ -213,6 +250,9 @@ class PMProDev_Migration_Assistant {
 					update_pmpro_membership_level_meta( $level_id, $meta_key, $meta_value );
 				}
 			}
+
+			// Add the level to the group.
+			pmpro_add_level_to_group( $level_id, $group_id );
 		}
 	}
 
