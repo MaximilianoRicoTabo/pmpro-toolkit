@@ -309,7 +309,6 @@ foreach ( $actions as $action => $options ) {
  * Output a message to the user.
  *
  * @param string $message The message to display.
- * @param string $type The type of message to display.
  * @since TBD
  * @return void
  */
