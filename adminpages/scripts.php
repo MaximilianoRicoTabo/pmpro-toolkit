@@ -16,6 +16,8 @@ $pmprodev_other_tables = array(
 	$wpdb->pmpro_membership_levels,
 	$wpdb->pmpro_memberships_categories,
 	$wpdb->pmpro_memberships_pages,
+	$wpdb->pmpro_groups,
+	$wpdb->pmpro_membership_levels_groups,
 );
 
 $clean_up_actions = array(
