@@ -313,6 +313,8 @@ add_action( 'init', 'pmpro_toolkit_load_textdomain', 1 );
  *
  * @param array $links the links array
  * @param string $file the file name
+ * @return array $links the links array
+ * @since TBD
  */
 function pmprodev_plugin_row_meta( $links, $file ) {
 	if( strpos( $file, 'pmpro-toolkit.php' ) !== false ) {
