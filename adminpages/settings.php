@@ -45,6 +45,14 @@
 
 		$pmprodev_options['credit_card_expiring'] = $credit_card_expiring;
 
+		if( isset( $_POST['pmprodev_options']['generate_info'] ) ) {
+			$generate_info = intval( $_POST['pmprodev_options']['generate_info'] );
+		} else {
+			$generate_info = 0;
+		}
+
+		$pmprodev_options['generate_info'] = $generate_info;
+
 		update_option( "pmprodev_options", $pmprodev_options );
 
 		// Assume success.
@@ -180,6 +188,16 @@
 							<?php esc_html_e( 'Send an email every time the Checkout page is hit.', 'pmpro-toolkit' ); ?>
 							<?php esc_html_e( 'This email will contain data about the request, user, membership level, order, and other information.', 'pmpro-toolkit' ); ?>
 						</p>
+					</td>
+				</tr>
+				<!-- Generate Checkout Info row -->
+				<tr>
+					<th scope="row" valign="top">
+						<label for="pmprodev_options[generate_info]"> <?php esc_html_e( 'Enable Generate Checkout Info Button', 'pmpro-toolkit' ); ?></label>
+					</th>
+					<td>
+						<input type="checkbox" id="pmprodev_options[generate_info]" name="pmprodev_options[generate_info]" value="1" <?php checked( $pmprodev_options['generate_info'], 1, true ); ?>>
+						<label for="pmprodev_options[generate_info]" class="description"><?php echo esc_html_e( 'Ability to generate checkout info when testing.', 'pmpro-toolkit' ); ?></label>
 					</td>
 				</tr>
 			</tbody>
