@@ -335,8 +335,8 @@ add_filter( 'plugin_row_meta', 'pmprodev_plugin_row_meta', 10, 2 );
  * @since TBD
  */
 function pmprodev_enqueue_scripts() {
-	wp_register_script( 'generate-checkout-info', plugins_url( 'js/pmprodev-generate-checkout-info.js', __FILE__ ), array( 'jquery' ) );
-	wp_enqueue_script( 'generate-checkout-info' );
+	wp_register_script( 'pmprodev-generate-checkout-info', plugins_url( 'js/pmprodev-generate-checkout-info.js', __FILE__ ), array( 'jquery' ) );
+	wp_enqueue_script( 'pmprodev-generate-checkout-info' );
 	//add css for the button
 	wp_register_style( 'pmprodev', plugins_url( 'css/pmprodev.css', __FILE__ ) );
 	wp_enqueue_style( 'pmprodev' );
@@ -362,8 +362,8 @@ function pmprodev_create_button() {
 	<div class="pmpro_card">
 		<h2 class="pmpro_card_title pmpro_font-large"><?php esc_html_e( 'Base Email for Generating New User', 'pmpro-toolkit' ); ?></h2>
 		<div class="pmpro_card_content">
-			<input type="text" id="pmprodev-base-email" value="<?php esc_attr( get_option('admin_email') ) ?>">
-			<button id='pmprodev-generate' type="button" disabled><? esc_html_e( 'Generate New User', 'pmpro-toolkit' ); ?></button>
+			<input type="text" id="pmprodev-base-email" value="<?php echo esc_attr( get_option('admin_email') ) ?>">
+			<button id='pmprodev-generate' type="button"><? esc_html_e( 'Generate New User', 'pmpro-toolkit' ); ?></button>
 		</div>
 	</div>
 
