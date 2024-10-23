@@ -311,7 +311,7 @@ foreach ( $actions as $action => $options ) {
  * Output a message to the user.
  *
  * @param string $message The message to display.
- * @since TBD
+ * @since 1.0
  * @return void
  */
 function pmprodev_clean_member_tables( $message ) {
@@ -327,7 +327,7 @@ function pmprodev_clean_member_tables( $message ) {
  * Reset all membership level, content protection, and discount code settings.
  *
  * @param string $message The message to display after the process is complete.
- * @since TBD
+ * @since 1.0
  * @return void
  */
 function pmprodev_clean_level_data( $message ) {
@@ -342,7 +342,7 @@ function pmprodev_clean_level_data( $message ) {
  * Scrub all member emails and transaction IDs.
  *
  * @param string $message The message to display after the process is complete.
- * @since TBD
+ * @since 1.0
  * @return void
  */
 function pmprodev_scrub_member_data( $message ) {
@@ -372,7 +372,7 @@ function pmprodev_scrub_member_data( $message ) {
  * Delete all non-admin users.
  *
  * @param string $message The message to display after the process is complete.
- * @since TBD
+ * @since 1.0
  * @return void
  */
 function pmprodev_delete_users( $message ) {
@@ -393,7 +393,7 @@ function pmprodev_delete_users( $message ) {
  * Reset all PMPro options.
  *
  * @param string $message The message to display after the process is complete.
- * @since TBD
+ * @since 1.0
  * @return void
  */
 function pmprodev_clean_pmpro_options( $message ) {
@@ -428,7 +428,7 @@ function pmprodev_clean_pmpro_options( $message ) {
  * Clear and reset all visits, views, and logins report data.
  *
  * @param string $message The message to display after the process is complete.
- * @since TBD
+ * @since 1.0
  * @return void
  */
 function pmprodev_clear_vvl_report( $message ) {
@@ -444,7 +444,7 @@ function pmprodev_clear_vvl_report( $message ) {
  *
  * @param string $message The message to display after the orders are deleted.
  * @return void
- * @since TBD
+ * @since 1.0
  */
 function pmprodev_delete_test_orders( $message ) {
 	global $wpdb;
@@ -455,7 +455,7 @@ function pmprodev_delete_test_orders( $message ) {
 /** Clear cached report data
  *
  * @param string $message The message to display after the process is complete.
- * @since TBD
+ * @since 1.0
  * @return void
  */
 function pmprodev_clear_cached_report_data( $message ) {
@@ -469,7 +469,7 @@ function pmprodev_clear_cached_report_data( $message ) {
  * Move all users with a specific membership level to another membership level.
  *
  * @param string $message The message to display after the process is complete.
- * @since TBD
+ * @since 1.0
  * @return void
  */
 function pmprodev_move_level( $message ) {
@@ -508,7 +508,7 @@ function pmprodev_move_level( $message ) {
  * Given a membership level ID, start date and end date  assign that level to all users without an active membership.
  *
  * @param string $message The message to display after the process is complete.
- * @since TBD
+ * @since 1.0
  * @return void
  */
 function pmprodev_give_level( $message ) {
@@ -549,7 +549,7 @@ function pmprodev_give_level( $message ) {
  * Cancel all users with a specific membership level.
  *
  * @param string $message The message to display after the process is complete.
- * @since TBD
+ * @since 1.0
  * @return void
  */
 function pmprodev_cancel_level( $message ) {
@@ -583,7 +583,7 @@ function pmprodev_cancel_level( $message ) {
  * Copy content restrictions from one membership level to another.
  *
  * @param string $message The message to display after the process is complete.
- * @since TBD
+ * @since 1.0
  * @return void
  */
 function pmprodev_copy_memberships_pages( $message ) {
@@ -608,7 +608,7 @@ function pmprodev_copy_memberships_pages( $message ) {
  * Delete all orders in token, pending, or review status that are older than a specified number of days.
  *
  * @param string $message The message to display after the process is complete.
- * @since TBD
+ * @since 1.0
  * @return void
  */
 function pmprodev_delete_incomplete_orders( $message ) {
@@ -643,7 +643,7 @@ function pmprodev_delete_incomplete_orders( $message ) {
  *
  * @param string $message The message to display.
  * @param string $type The type of message to display.
- * @since TBD
+ * @since 1.0
  * @return void
  */
 function pmprodev_output_message( $message, $type = 'success' ) {
@@ -656,7 +656,7 @@ function pmprodev_output_message( $message, $type = 'success' ) {
 /**
  * Output a message to the screen when a process is complete.
  *
- * @since TBD
+ * @since 1.0
  * @return void
  */
 function pmprodev_process_complete() {
@@ -667,7 +667,7 @@ function pmprodev_process_complete() {
  * Expand the actions after dom is ready.
  *
  * @param string $action The action to expand.
- * @since TBD
+ * @since 1.0
  * @return void
  */
 function pmprodev_expand_actions( $action ) {

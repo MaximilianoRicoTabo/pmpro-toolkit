@@ -3,7 +3,7 @@ Contributors: strangerstudios, jessica o
 Tags: paid memberships pro, pmpro, debug, developer, toolkit
 Requires at least: 5.0
 Tested up to: 6.2
-Stable tag: 0.8.1
+Stable tag: 1.0
 
 Adds various tools and settings to aid in the development of Paid Memberships Pro enabled websites.
 
@@ -29,6 +29,17 @@ Features:
 Please post it in the issues section of GitHub and we'll fix it as soon as we can. Thanks for helping. https://github.com/strangerstudios/pmpro-toolkit/issues
 
 == Changelog ==
+= 1.0 - 2024-10-23 =
+* SECURITY: Added nonce checks to the admin forms. #36 (@MaximilianoRicoTabo)
+* FEATURE: Added an option to allow automatically generating test user data at checkout. #44 (@MaximilianoRicoTabo)
+* FEATURE: Added support for importing and exporting user fields. #30 (@andrewlimaza)
+* FEATURE: Added a script to delete old token, pending, and review orders. #33 (@dparker1005)
+* FEATURE: Added a script to delete test orders. #40 (@MaximilianoRicoTabo)
+* FEATURE: Added a script to clear cached report data. #39 (@MaximilianoRicoTabo)
+* ENHANCEMENT: Moved the Toolkit admin pages to the Memberships menu and updated the UI. #36 (@MaximilianoRicoTabo)
+* BUG FIX/ENHANCEMENT: Updated clean up scripts to account for tables added in PMPro v3.0. #41 (@MaximilianoRicoTabo)
+* DEPRECATED: Removed the "View As" feature as this is now included in the core Paid Memberships Pro plugin. #37 (@MaximilianoRicoTabo)
+
 = 0.8.1 - 2023-04-08 =
 * BUG FIX: Fixed issue where the checkout debug feature interfered with redirects.
 

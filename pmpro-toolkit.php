@@ -3,7 +3,7 @@
  * Plugin Name: Paid Memberships Pro - Developer's Toolkit Add On
  * Plugin URI: https://www.paidmembershipspro.com/add-ons/pmpro-toolkit/
  * Description: Various tools to test and debug Paid Memberships Pro enabled websites.
- * Version: 0.8.1
+ * Version: 1.0
  * Author: Paid Memberships Pro
  * Author URI: https://www.paidmembershipspro.com
  * Text Domain: pmpro-toolkit
@@ -57,7 +57,7 @@ include_once PMPRODEV_DIR . '/classes/class-pmprodev-migration-assistant.php';
  * Remove the cron jobs for expiration warnings and expiring credit cards if the options are set.
  *
  * @return void
- * @since TBD
+ * @since 1.0
  */
 function pmprodev_gateway_debug_setup() {
 
@@ -101,7 +101,7 @@ add_action('init', 'pmprodev_gateway_debug_setup');
  * @param string $recipient the email recipient
  * @param object $email the email object
  * @return string $recipient the email recipient
- * @since TBD
+ * @since 1.0
  *
  */
 function pmprodev_redirect_emails( $recipient, $email ) {
@@ -121,7 +121,7 @@ add_filter( 'pmpro_email_recipient', 'pmprodev_redirect_emails', 10, 2 );
  *
  * @param mixed $filter_contents to not break the wp_redirect filter.
  * @return mixed $filter_contents to not break the wp_redirect filter.
- * @since TBD
+ * @since 1.0
  */
 function pmprodev_checkout_debug_email( $filter_contents = null ) {
 
@@ -233,7 +233,7 @@ add_action( 'shutdown', 'pmprodev_checkout_debug_email' );
  * Add settings page to the PMPro admin menu.
  *
  * @return void
- * @since TBD
+ * @since 1.0
  */
 function pmprodev_admin_menu() {
 	$pmprodev_menu_text = __( 'Toolkit', 'pmpro-toolkit' );
@@ -249,7 +249,7 @@ add_action( 'admin_bar_menu', 'pmprodev_admin_menu_bar', 2000 );
  *
  * @param WP_Admin_Bar $wp_admin_bar the WP_Admin_Bar object.
  * @return void
- * @since TBD
+ * @since 1.0
  */
 function pmprodev_admin_menu_bar( $wp_admin_bar ) {
 	$wp_admin_bar->add_menu( array(
@@ -265,7 +265,7 @@ function pmprodev_admin_menu_bar( $wp_admin_bar ) {
  * Catch request and call export function.
  *
  * @return void
- * @since TBD
+ * @since 1.0
  */
 function pmprodev_process_migration_export() {
 	if ( ! empty( $_REQUEST['page'] ) && 'pmpro-toolkit' === $_REQUEST['page'] && ! empty( $_REQUEST['section'] )
@@ -279,7 +279,7 @@ add_action( 'admin_init', 'pmprodev_process_migration_export' );
  * Load the settings page.
  *
  * @return void
- * @since TBD	
+ * @since 1.0	
  */
 function pmprodev_settings_page() {
 	require_once( plugin_dir_path( __FILE__ ) . '/adminpages/toolkit.php' );
@@ -289,7 +289,7 @@ function pmprodev_settings_page() {
  * Load the text domain for translation.
  *
  * @return void
- * @since TBD
+ * @since 1.0
  */
 function pmpro_toolkit_load_textdomain() {
 	// get the locale
@@ -314,7 +314,7 @@ add_action( 'init', 'pmpro_toolkit_load_textdomain', 1 );
  * @param array $links the links array
  * @param string $file the file name
  * @return array $links the links array
- * @since TBD
+ * @since 1.0
  */
 function pmprodev_plugin_row_meta( $links, $file ) {
 	if( strpos( $file, 'pmpro-toolkit.php' ) !== false ) {
@@ -332,7 +332,7 @@ add_filter( 'plugin_row_meta', 'pmprodev_plugin_row_meta', 10, 2 );
  * Enqueue scripts on the frontend.
  *
  * @return void
- * @since TBD
+ * @since 1.0
  */
 function pmprodev_enqueue_scripts() {
 	wp_register_script( 'pmprodev-generate-checkout-info', plugins_url( 'js/pmprodev-generate-checkout-info.js', __FILE__ ), array( 'jquery' ) );
@@ -348,7 +348,7 @@ add_action( 'wp_enqueue_scripts', 'pmprodev_enqueue_scripts' );
  * Add a button to the checkout page to fill in the user data form.
  *
  * @return void
- * @since TBD
+ * @since 1.0
  */
 function pmprodev_create_button() {
 	global $pmpro_level;
