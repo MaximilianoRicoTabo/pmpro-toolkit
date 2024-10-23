@@ -38,6 +38,7 @@ Please post it in the issues section of GitHub and we'll fix it as soon as we ca
 * FEATURE: Added a script to clear cached report data. #39 (@MaximilianoRicoTabo)
 * ENHANCEMENT: Moved the Toolkit admin pages to the Memberships menu and updated the UI. #36 (@MaximilianoRicoTabo)
 * BUG FIX/ENHANCEMENT: Updated clean up scripts to account for tables added in PMPro v3.0. #41 (@MaximilianoRicoTabo)
+* BUG FIX: Fixed a PHP warning when sending the chekcout debug email if the `password2` field is not collected at checkout. #45 (@MaximilianoRicoTabo) 
 * DEPRECATED: Removed the "View As" feature as this is now included in the core Paid Memberships Pro plugin. #37 (@MaximilianoRicoTabo)
 
 = 0.8.1 - 2023-04-08 =
