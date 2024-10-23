@@ -209,7 +209,7 @@ function pmprodev_checkout_debug_email( $filter_contents = null ) {
 	if ( isset( $password_bu ) ) {
 		$_REQUEST['password'] = $password_bu;
 	}
-	if ( isset( $user_pass_bu ) ) {
+	if ( isset( $user_pass_bu ) && isset( $password2_bu ) ) {
 		$_REQUEST['password2'] = $password2_bu;
 	}
 
